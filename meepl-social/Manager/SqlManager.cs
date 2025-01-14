@@ -1,6 +1,9 @@
-namespace meepl_social.Manager;
+namespace Meepl.Social.Manager;
 
 public class SqlManager
 {
     public static string ConnectionString;
+    
+    
+    
 }
