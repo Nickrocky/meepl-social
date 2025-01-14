@@ -23,7 +23,7 @@ public class SQLCommands
     public const string CREATE_BLOCKED_TABLE = ";";
     public const string CREATE_FRIENDS_TABLE = ";";
     public const string CREATE_CLANS_TABLE = ";";
-    public const string CREATE_BADGES_TABLE = ";";
+    public const string CREATE_BADGES_TABLE = "CREATE TABLE IF NOT EXISTS BADGES (BADGEID BIGINT PRIMARY KEY, BADGEBLOB BYTEA, BADGEHASH VARCHAR(128));";
     public const string CREATE_EVENTS_TABLE = ";";
     public const string CREATE_CLUBS_TABLE = ";";
 
