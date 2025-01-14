@@ -18,4 +18,15 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers" />
+      <Folder Include="Lib" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Mercurial">
+        <HintPath>Lib\Mercurial.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
