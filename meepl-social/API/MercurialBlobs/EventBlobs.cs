@@ -37,7 +37,7 @@ public class EventBlobs : IMercurial
     /// This is the ID of the Event Host
     /// </summary>
     
-    [JsonProperty("EventHostID")] public ulong EventHostID { get; set; }
+    [JsonProperty("EventHostID")] public ulong EventHostId { get; set; }
     
     
     /// <summary>
@@ -49,21 +49,74 @@ public class EventBlobs : IMercurial
     
     public byte[] GetBytes()
     {
-        throw new NotImplementedException();
+        Pack pack = new Pack();
+        pack.Append(Name);
+        pack.Append(Description);
+        pack.Append((byte)EventHostType);
+        pack.Append(EventHostId);
+        pack.Append(EventTimeStart.ToBinary());
+        pack.Append(EventTimeEnd.ToBinary());
+        return pack.Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
-        throw new NotImplementedException();
+        packer
+            .Append(Name)
+            .Append(Description)
+            .Append((byte)EventHostType)
+            .Append(EventHostId)
+            .Append(EventTimeStart.ToBinary())
+            .Append(EventTimeEnd.ToBinary());
+        
     }
 
     public void FromBytes(byte[] payload)
     {
-        throw new NotImplementedException();
+        string name = "", description = "";
+        ulong eventHostId = 0;
+        byte eventSource = 0;
+        long eventTimeStart = 0;
+        long eventTimeEnd = 0;
+       
+        
+        
+        Unpack unpack = new Unpack(payload);
+        unpack
+            .Read(ref name)
+            .Read(ref description)
+            .Read(ref eventSource)
+            .Read(ref eventHostId)
+            .Read(ref eventTimeStart)
+            .Read(ref eventTimeEnd)
+            .Finish();
+        
+        EventHostType = (EventSource)eventSource;
+        EventTimeStart= DateTime.FromBinary(eventTimeStart);
+        EventTimeEnd  = DateTime.FromBinary(eventTimeEnd);
+        
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
-        throw new NotImplementedException();
+        string name = "", description = "";
+        ulong eventHostId = 0;
+        byte eventSource = 0;
+        long eventTimeStart = 0;
+        long eventTimeEnd = 0;
+
+        unpack
+            .Read(ref name)
+            .Read(ref description)
+            .Read(ref eventSource)
+            .Read(ref eventHostId)
+            .Read(ref eventTimeStart)
+            .Read(ref eventTimeEnd);
+        
+        
+        EventHostType = (EventSource)eventSource;
+        EventTimeStart= DateTime.FromBinary(eventTimeStart);
+        EventTimeEnd  = DateTime.FromBinary(eventTimeEnd);
+
     }
 }
