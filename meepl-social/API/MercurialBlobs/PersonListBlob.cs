@@ -6,19 +6,19 @@ using Mercurial.Util;
 namespace Meepl.API.MercurialBlobs;
 
 /// <summary>
-/// The blob representing a players friends, this object is p much a formality
+/// The blob representing a list of players, this object is p much a formality
 /// </summary>
-public class FriendsBlob : IMercurial
+public class PersonListBlob : IMercurial
 {
     /// <summary>
-    /// List of all of the people that a person is friends with
+    /// List of all of the people in that person list
     /// </summary>
-    public List<TableboundIdentifier> Friends { get; set; }
+    public List<TableboundIdentifier> PersonList { get; set; }
 
     public byte[] GetBytes()
     {
         List<long> identifiers = new List<long>();
-        foreach (TableboundIdentifier identifier in Friends)
+        foreach (TableboundIdentifier identifier in PersonList)
         {
             identifiers.Add((long) identifier.Value);
         }
@@ -46,7 +46,7 @@ public class FriendsBlob : IMercurial
             tableboundIdentifiers.Add(TableboundIdentifier.Parse((ulong)val));
         }
 
-        Friends = tableboundIdentifiers;
+        PersonList = tableboundIdentifiers;
     }
 
     public void ComponentFromBytes(Unpack unpack)
