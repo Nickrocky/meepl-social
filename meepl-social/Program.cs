@@ -1,5 +1,5 @@
+using Meepl.Social.Manager;
 using Meepl.Util;
-using meepl_social.Manager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
