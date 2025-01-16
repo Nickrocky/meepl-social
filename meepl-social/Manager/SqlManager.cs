@@ -1,4 +1,4 @@
-namespace Meepl.Social.Manager;
+namespace Meepl.Managers;
 
 public class SqlManager
 {

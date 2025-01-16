@@ -1,4 +1,4 @@
-using Meepl.Social.Manager;
+using Meepl.Managers;
 using Meepl.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

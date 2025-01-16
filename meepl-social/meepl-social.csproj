@@ -19,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
       <Folder Include="Lib" />
+      <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>

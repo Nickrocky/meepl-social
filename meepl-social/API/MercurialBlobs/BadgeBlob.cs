@@ -25,6 +25,11 @@ public class BadgeBlob : IMercurial
     /// The location of the icon on the CDN
     /// </summary>
     [JsonProperty("CDN")] public string CDNRoute { get; set; }
+    
+    /// <summary>
+    /// Badge identifier 
+    /// </summary>
+    [JsonProperty("ID")] public ulong ID { get; set; }
 
     public byte[] GetBytes()
     {
@@ -33,6 +38,7 @@ public class BadgeBlob : IMercurial
             .Append(Name)
             .Append(Description)
             .Append(CDNRoute)
+            .Append(ID)
             .Build();
     }
 
@@ -41,26 +47,42 @@ public class BadgeBlob : IMercurial
         packer
             .Append(Name)
             .Append(Description)
-            .Append(CDNRoute);
+            .Append(CDNRoute)
+            .Append(ID);
     }
 
     public void FromBytes(byte[] payload)
     {
         string name = "", description = "", cdnroute = "";
+        ulong id = 0;
         Unpack unpack = new Unpack(payload);
         unpack
             .Read(ref name)
             .Read(ref description)
             .Read(ref cdnroute)
+            .Read(ref id)
             .Finish();
+        
+       Name = name;
+       Description = description;
+       CDNRoute = cdnroute;
+       ID = id;
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
         string name = "", description = "", cdnroute = "";
+        ulong id = 0;
         unpack
             .Read(ref name)
             .Read(ref description)
-            .Read(ref cdnroute);
+            .Read(ref cdnroute)
+            .Read(ref id);
+        
+        Name = name;    
+        Description = description;
+        CDNRoute = cdnroute;
+        ID = id;
+
     }
 }
