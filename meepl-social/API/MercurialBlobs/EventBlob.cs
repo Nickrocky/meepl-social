@@ -12,7 +12,7 @@ namespace Meepl.API.MercurialBlobs;
 /// This is the object representing badges as a Mercurial blob, there is also JSON serialization enabled so we can upload Badges as JSONs
 /// </summary>
 
-public class EventBlobs : IMercurial
+public class EventBlob : IMercurial
 { 
     /// <summary>
     /// The name of the Event when you hover it

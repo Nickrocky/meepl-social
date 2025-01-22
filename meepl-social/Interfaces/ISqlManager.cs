@@ -1,3 +1,5 @@
+using Meepl.API.MercurialBlobs;
+
 namespace Meepl.API;
 
 /// <summary>
@@ -22,6 +24,28 @@ public interface ISQLManager
     /// <param name="profile">The profile of the person you want to update</param>
     /// <returns></returns>
     Task UpdateTableboundProfile(TableboundProfile profile);
+
+    #endregion
+
+    #region Badges
+    
+    /// <summary>
+    /// Gets the badge from the database
+    /// </summary>
+    /// <param name="badgeIdentifier">The identifier for the badge in the database</param>
+    /// <returns>The badge associated to that identifier in the database.</returns>
+    public Task<BadgeBlob> GetBadge(ulong badgeIdentifier);
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// Gets the event from the database
+    /// </summary>
+    /// <param name="eventIdentifier">The identifier for the event in the database</param>
+    /// <returns>The event associated to that identifier in the database</returns>
+    public Task<EventBlob> GetEvent(ulong eventIdentifier);
 
     #endregion
     
