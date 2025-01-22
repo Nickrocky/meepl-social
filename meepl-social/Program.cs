@@ -83,6 +83,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         bearer.TokenValidationParameters = tokenValidationParameters;
     });
 
+ProfileManager profileManager = new ProfileManager();
+profileManager.Init(sqlManager);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
