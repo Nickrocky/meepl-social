@@ -27,7 +27,7 @@ public class FriendController : ControllerBase
     /// <returns>A structured response with the user's friends list.</returns>
     [HttpGet]
     [Route("friends/{userId}")]
-    public ActionResult<FriendList_Lookup> GetFriends(string userId)
+    public ActionResult<FriendList_Lookup> GetFriends(ulong userId)
     {
         _logger.LogInformation("Fetching friends list for user: {UserId}", userId);
 
@@ -58,7 +58,7 @@ public class FriendController : ControllerBase
     /// <returns>A structured response with the user's blocked users list.</returns>
     [HttpGet]
     [Route("blocked/{userId}")]
-    public ActionResult<BlockedUsers_Lookup> GetBlockedUsers(string userId)
+    public ActionResult<BlockedUsers_Lookup> GetBlockedUsers(ulong userId)
     {
         _logger.LogInformation("Fetching blocked users for user: {UserId}", userId);
 
@@ -89,7 +89,7 @@ public class FriendController : ControllerBase
     /// <returns>A structured response with the user's friend requests.</returns>
     [HttpGet]
     [Route("requests/{userId}")]
-    public ActionResult<FriendRequests_Lookup> GetFriendRequests(string userId)
+    public ActionResult<FriendRequests_Lookup> GetFriendRequests(ulong userId)
     {
         _logger.LogInformation("Fetching friend requests for user: {UserId}", userId);
 
@@ -116,7 +116,7 @@ public class FriendController : ControllerBase
     /// <returns>A status message indicating success or failure.</returns>
     [HttpPost]
     [Route("add")]
-    public ActionResult AddFriend([FromBody] AddFriendRequest request)
+    public ActionResult AddFriend([FromBody] FriendRequest request)
     {
         _logger.LogInformation("Processing friend addition request from {RequesterId} to {FriendId}", request.RequesterId, request.FriendId);
 
@@ -126,7 +126,7 @@ public class FriendController : ControllerBase
             return BadRequest(new { Msg = "Invalid requester or friend ID." });
         }
 
-        var success = _friendService.AddFriend(request);
+        var success = _friendService.AddFriend();
         if (!success)
         {
             _logger.LogWarning("Failed to add friend for {RequesterId}", request.RequesterId);

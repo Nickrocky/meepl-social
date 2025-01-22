@@ -13,4 +13,5 @@ public enum AccountType
     APPLE,
     EPIC, 
     DISCORD,
+    NONE = -1
 }
