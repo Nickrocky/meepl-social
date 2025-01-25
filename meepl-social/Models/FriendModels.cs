@@ -78,6 +78,7 @@ public class FriendRequest
     /// </summary>
     [JsonProperty("friend_id")]
     public ulong FriendId { get; set; }
+    
 
     /// <summary>
     /// Optional message included in the friend request.

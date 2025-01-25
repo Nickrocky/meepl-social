@@ -1,47 +1,49 @@
 ﻿using Meepl.API;
 using Meepl.Models;
 using Meepl.Social.Interfaces;
+using Meepl.Util;
 
 namespace Meepl.Managers;
 
 public class FriendService : IFriendService
 {
-    public bool IsValidUserId(ulong userId)
+    public async Task<bool> IsValidUserIdAsync(ulong userId)
     {
-        return TableboundIdentifier.Parse(userId).IsEmpty();
+        return await Task.FromResult(!TableboundIdentifier.Parse(userId).IsEmpty());
+
     }
 
-    public List<ulong> GetFriends(ulong userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<ulong> GetBlockedUsers(ulong userId)
+    public Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
     {
         throw new NotImplementedException();
     }
 
-    List<ulong> IFriendService.GetFriendRequests(ulong userId)
+    public Task<Result<List<ulong>>> GetBlockedUsersAsync(ulong userId)
     {
         throw new NotImplementedException();
     }
 
-    public List<ulong> AddFriend(ulong userId)
+    public Task<Result<List<ulong>>> GetFriendRequestsAsync(ulong userId)
     {
         throw new NotImplementedException();
     }
 
-    public bool AddFriend()
+    public Task<bool> AddFriendAsync(ulong requesterId, ulong friendId)
     {
         throw new NotImplementedException();
     }
 
-    public FriendRequests_Lookup GetFriendRequests(ulong userId)
+    public Task<bool> RemoveFriendAsync(ulong requesterId, ulong friendId)
     {
         throw new NotImplementedException();
     }
 
-    public bool AddFriend(FriendRequest request)
+    public Task<bool> BlockUserAsync(ulong requesterId, ulong blockedUserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
     {
         throw new NotImplementedException();
     }
