@@ -14,20 +14,16 @@ public interface IFriendService
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a boolean indicating validity.</returns>
-    public async Task<bool> IsValidUserIdAsync(ulong userId)
-    {
-        return await Task.FromResult(!TableboundIdentifier.Parse(userId).IsEmpty());
-    }
+    Task<bool> IsValidUserIdAsync(ulong userId);
+    
+
 
     /// <summary>
     /// Retrieves the friends list of a user.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friends.</returns>
-    public async Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
-    {
-        return await Task.FromResult(List<>)
-    }
+    Task<Result<List<ulong>>> GetFriendsAsync(ulong userId);
 
     /// <summary>
     /// Retrieves the list of blocked users for a user.

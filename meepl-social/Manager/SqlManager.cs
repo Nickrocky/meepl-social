@@ -224,6 +224,21 @@ public class SqlManager : ISQLManager
         return new TableboundProfile(publicProfile, friends, blockedUsers, clubs, unlockedBadgeList);
     }
 
+    public Task UpdateTableboundProfile(TableboundProfile profile)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<BadgeBlob> GetBadge(ulong badgeIdentifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<EventBlob> GetEvent(ulong eventIdentifier)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task PutTableboundProfile(TableboundProfile profile)
     {
         string cmd = "INSERT INTO TABLEBOUND_PROFILE (TABLEBOUNDID, USERNAME, BIO, PROFILEPICTURE, CARDBACKGROUND, TITLE, STATUS) VALUES ($1, $2, $3, $4, $5, $6, $7);";

@@ -13,38 +13,44 @@ public class FriendService : IFriendService
 
     }
 
-    public Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
+    public async Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
     {
-        throw new NotImplementedException();
+        var friends = await GetFriendsAsync(userId);
+        return new Result<List<ulong>>(friends);
     }
 
-    public Task<Result<List<ulong>>> GetBlockedUsersAsync(ulong userId)
+    public async Task<Result<List<ulong>>> GetBlockedUsersAsync(ulong userId)
     {
-        throw new NotImplementedException();
+        var blocked = await GetBlockedUsersAsync(userId);
+        return new Result<List<ulong>>(blocked);
     }
 
-    public Task<Result<List<ulong>>> GetFriendRequestsAsync(ulong userId)
+    public async Task<Result<List<ulong>>> GetFriendRequestsAsync(ulong userId)
     {
-        throw new NotImplementedException();
+        var requests = await GetFriendRequestsAsync(userId);
+        return new Result<List<ulong>>(requests);
     }
 
-    public Task<bool> AddFriendAsync(ulong requesterId, ulong friendId)
+    public async Task<bool> AddFriendAsync(ulong requesterId, ulong friendId)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(!TableboundIdentifier.Parse(friendId).IsEmpty());
     }
 
-    public Task<bool> RemoveFriendAsync(ulong requesterId, ulong friendId)
+    public async Task<bool> RemoveFriendAsync(ulong requesterId, ulong friendId)
     {
-        throw new NotImplementedException();
+        await RemoveFriendAsync(requesterId, friendId);
+        return await Task.FromResult(true);
     }
 
-    public Task<bool> BlockUserAsync(ulong requesterId, ulong blockedUserId)
+    public async Task<bool> BlockUserAsync(ulong requesterId, ulong blockedUserId)
     {
-        throw new NotImplementedException();
+        await BlockUserAsync(requesterId, blockedUserId);
+        return await Task.FromResult(true);
     }
 
-    public Task<bool> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
+    public async Task<bool> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
     {
-        throw new NotImplementedException();
+        await UnblockUserAsync(requesterId, blockedUserId);
+        return await Task.FromResult(true);
     }
 }
