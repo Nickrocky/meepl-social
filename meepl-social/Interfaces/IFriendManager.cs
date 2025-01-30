@@ -7,7 +7,7 @@ namespace Meepl.Social.Interfaces;
 /// <summary>
 /// Interface for managing friend-related operations.
 /// </summary>
-public interface IFriendService
+public interface IFriendManager
 {
     /// <summary>
     /// Determines if a user ID is valid.
@@ -21,21 +21,21 @@ public interface IFriendService
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friends.</returns>
-    Task<Result<List<ulong>>> GetFriendsAsync(ulong userId);
+    Task<List<ulong>> GetFriendsAsync(ulong userId);
 
     /// <summary>
     /// Retrieves the list of blocked users for a user.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of blocked users.</returns>
-    Task<Result<List<ulong>>> GetBlockedUsersAsync(ulong userId);
+    Task<List<ulong>> GetBlockedUsersAsync(ulong userId);
 
     /// <summary>
     /// Retrieves the friend requests for a user.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friend requests.</returns>
-    Task<Result<List<ulong>>> GetFriendRequestsAsync(ulong userId);
+    Task<List<ulong>> GetFriendRequestsAsync(ulong userId);
 
     /// <summary>
     /// Adds a friend for the user.

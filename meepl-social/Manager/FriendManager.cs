@@ -5,28 +5,28 @@ using Meepl.Util;
 
 namespace Meepl.Managers;
 
-public class FriendService : IFriendService
+public class FriendManager : IFriendManager
 {
     public bool IsValidUserID(ulong userID){
         return (!TableboundIdentifier.Parse(userID).IsEmpty());
     }
 
-    public async Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
+    public async Task<List<ulong>> GetFriendsAsync(ulong userId)
     {
         var friends = await GetFriendsAsync(userId);
-        return new Result<List<ulong>>(friends);
+        return new List<ulong>(friends);
     }
 
-    public async Task<Result<List<ulong>>> GetBlockedUsersAsync(ulong userId)
+    public async Task<List<ulong>> GetBlockedUsersAsync(ulong userId)
     {
         var blocked = await GetBlockedUsersAsync(userId);
-        return new Result<List<ulong>>(blocked);
+        return new List<ulong>(blocked);
     }
 
-    public async Task<Result<List<ulong>>> GetFriendRequestsAsync(ulong userId)
+    public async Task<List<ulong>> GetFriendRequestsAsync(ulong userId)
     {
         var requests = await GetFriendRequestsAsync(userId);
-        return new Result<List<ulong>>(requests);
+        return new List<ulong>(requests);
     }
 
     public async Task<bool> AddFriendAsync(ulong requesterId, ulong friendId)

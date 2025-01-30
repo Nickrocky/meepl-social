@@ -1,4 +1,6 @@
+using Meepl.Controllers;
 using Meepl.Managers;
+using Meepl.Social.Interfaces;
 using Meepl.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -85,6 +87,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 ProfileManager profileManager = new ProfileManager();
 //profileManager.Init(SqlManager);
+
+FriendManager friendManager = new FriendManager();
+
 
 var app = builder.Build();
 

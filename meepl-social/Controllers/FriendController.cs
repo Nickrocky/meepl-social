@@ -1,5 +1,5 @@
-﻿using Meepl.Models;
-using Meepl.Social.Interfaces;
+﻿using Meepl.Managers;
+using Meepl.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meepl.Controllers;
@@ -12,12 +12,12 @@ namespace Meepl.Controllers;
 public class FriendController : ControllerBase
 {
     private readonly ILogger<FriendController> _logger;
-    private readonly IFriendService _friendService;
+    private readonly FriendManager _friendManager;
 
-    public FriendController(ILogger<FriendController> logger, IFriendService friendService)
+    public FriendController(ILogger<FriendController> logger, FriendManager friendManager)
     {
         _logger = logger;
-        _friendService = friendService;
+        _friendManager = friendManager;
     }
 
     /// <summary>
@@ -28,14 +28,14 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching friends list for user: {UserId}", userId);
 
-        if (!_friendService.IsValidUserID(userId))
+        if (!_friendManager.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
         }
 
-        var result = await _friendService.GetFriendsAsync(userId);
-        if (!result.IsSuccess || result.Value == null)
+        var result = await _friendManager.GetFriendsAsync(userId);
+        if (result == null)
         {
             _logger.LogWarning("No friends found for user: {UserId}", userId);
             return NotFound(new { Msg = "No friends found." });
@@ -44,7 +44,7 @@ public class FriendController : ControllerBase
         return Ok(new FriendList_Lookup
         {
             UserId = userId,
-            Friends = result.Value
+            Friends = result
         });
     }
 
@@ -56,14 +56,14 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching blocked users for user: {UserId}", userId);
 
-        if (!_friendService.IsValidUserID(userId))
+        if (!_friendManager.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
         }
 
-        var result = await _friendService.GetBlockedUsersAsync(userId);
-        if (!result.IsSuccess || result.Value == null)
+        var result = await _friendManager.GetBlockedUsersAsync(userId);
+        if (result == null)
         {
             _logger.LogWarning("No blocked users found for user: {UserId}", userId);
             return NotFound(new { Msg = "No blocked users found." });
@@ -72,7 +72,7 @@ public class FriendController : ControllerBase
         return Ok(new BlockedUsers_Lookup
         {
             UserId = userId,
-            BlockedUsers = result.Value
+            BlockedUsers = result
         });
     }
 
@@ -84,20 +84,20 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching friend requests for user: {UserId}", userId);
 
-        if (!_friendService.IsValidUserID(userId))
+        if (!_friendManager.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
         }
 
-        var result = await _friendService.GetFriendRequestsAsync(userId);
-        if (!result.IsSuccess || result.Value == null)
+        var result = await _friendManager.GetFriendRequestsAsync(userId);
+        if (result == null)
         {
             _logger.LogWarning("No friend requests found for user: {UserId}", userId);
             return NotFound(new { Msg = "No friend requests found." });
         }
 
-        return Ok(result.Value);
+        return Ok(result);
     }
 
     /// <summary>
@@ -108,14 +108,14 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Processing friend addition request from {RequesterId} to {FriendId}", request.RequesterId, request.FriendId);
 
-        if (!_friendService.IsValidUserID(request.RequesterId) || 
-            !_friendService.IsValidUserID(request.FriendId))
+        if (!_friendManager.IsValidUserID(request.RequesterId) || 
+            !_friendManager.IsValidUserID(request.FriendId))
         {
             _logger.LogWarning("Invalid requester or friend ID: {RequesterId}, {FriendId}", request.RequesterId, request.FriendId);
             return BadRequest(new { Msg = "Invalid requester or friend ID." });
         }
 
-        var success = await _friendService.AddFriendAsync(request.RequesterId, request.FriendId);
+        var success = await _friendManager.AddFriendAsync(request.RequesterId, request.FriendId);
         if (!success)
         {
             _logger.LogWarning("Failed to add friend for {RequesterId}", request.RequesterId);
