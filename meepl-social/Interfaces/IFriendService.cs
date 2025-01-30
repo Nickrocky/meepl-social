@@ -14,10 +14,8 @@ public interface IFriendService
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a boolean indicating validity.</returns>
-    Task<bool> IsValidUserIdAsync(ulong userId);
+    public bool IsValidUserID(ulong userID);
     
-
-
     /// <summary>
     /// Retrieves the friends list of a user.
     /// </summary>

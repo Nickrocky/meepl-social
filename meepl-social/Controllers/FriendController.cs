@@ -28,7 +28,7 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching friends list for user: {UserId}", userId);
 
-        if (!await _friendService.IsValidUserIdAsync(userId))
+        if (!_friendService.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
@@ -56,7 +56,7 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching blocked users for user: {UserId}", userId);
 
-        if (!await _friendService.IsValidUserIdAsync(userId))
+        if (!_friendService.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
@@ -84,7 +84,7 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Fetching friend requests for user: {UserId}", userId);
 
-        if (!await _friendService.IsValidUserIdAsync(userId))
+        if (!_friendService.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
             return BadRequest(new { Msg = "Invalid user ID." });
@@ -108,8 +108,8 @@ public class FriendController : ControllerBase
     {
         _logger.LogInformation("Processing friend addition request from {RequesterId} to {FriendId}", request.RequesterId, request.FriendId);
 
-        if (!await _friendService.IsValidUserIdAsync(request.RequesterId) || 
-            !await _friendService.IsValidUserIdAsync(request.FriendId))
+        if (!_friendService.IsValidUserID(request.RequesterId) || 
+            !_friendService.IsValidUserID(request.FriendId))
         {
             _logger.LogWarning("Invalid requester or friend ID: {RequesterId}, {FriendId}", request.RequesterId, request.FriendId);
             return BadRequest(new { Msg = "Invalid requester or friend ID." });

@@ -7,10 +7,8 @@ namespace Meepl.Managers;
 
 public class FriendService : IFriendService
 {
-    public async Task<bool> IsValidUserIdAsync(ulong userId)
-    {
-        return await Task.FromResult(!TableboundIdentifier.Parse(userId).IsEmpty());
-
+    public bool IsValidUserID(ulong userID){
+        return (!TableboundIdentifier.Parse(userID).IsEmpty());
     }
 
     public async Task<Result<List<ulong>>> GetFriendsAsync(ulong userId)
