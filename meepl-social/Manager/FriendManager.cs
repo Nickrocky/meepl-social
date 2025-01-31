@@ -3,11 +3,25 @@ using Meepl.Models;
 using Meepl.Social.Interfaces;
 using Meepl.Util;
 
+
 namespace Meepl.Managers;
 
 public class FriendManager : IFriendManager
 {
-    public bool IsValidUserID(ulong userID){
+    private static FriendManager instance;
+    private static ISQLManager SQLManagerProvider;
+
+    public static FriendManager Get()
+    {
+        return instance;
+    }
+    public async Task Init(ISQLManager sqlManager)
+    {
+        instance = this;
+        SQLManagerProvider = sqlManager;
+    }
+    public bool IsValidUserID(ulong userID)
+    {
         return (!TableboundIdentifier.Parse(userID).IsEmpty());
     }
 

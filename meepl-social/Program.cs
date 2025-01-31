@@ -1,3 +1,4 @@
+using Meepl.API;
 using Meepl.Controllers;
 using Meepl.Managers;
 using Meepl.Social.Interfaces;
@@ -65,6 +66,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(securityRequirement);
 });
 
+
 SqlManager.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 var tokenValidationParameters = new TokenValidationParameters
@@ -85,10 +87,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         bearer.TokenValidationParameters = tokenValidationParameters;
     });
 
+SqlManager manager = new SqlManager();
+
 ProfileManager profileManager = new ProfileManager();
-//profileManager.Init(SqlManager);
+profileManager.Init(manager);
 
 FriendManager friendManager = new FriendManager();
+friendManager.Init(manager);
 
 
 var app = builder.Build();
