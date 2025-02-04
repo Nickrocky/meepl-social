@@ -1,4 +1,5 @@
 ﻿using Meepl.API;
+using Meepl.API.MercurialBlobs;
 using Meepl.Models;
 using Meepl.Util;
 
@@ -21,14 +22,14 @@ public interface IFriendManager
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friends.</returns>
-    Task<List<ulong>> GetFriendsAsync(ulong userId);
+    Task<PersonListBlob> GetFriendsAsync(ulong userId);
 
     /// <summary>
     /// Retrieves the list of blocked users for a user.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of blocked users.</returns>
-    Task<List<ulong>> GetBlockedUsersAsync(ulong userId);
+    Task<PersonListBlob> GetBlockedUsersAsync(ulong userId);
 
     /// <summary>
     /// Retrieves the friend requests for a user.

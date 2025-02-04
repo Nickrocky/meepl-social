@@ -1,5 +1,8 @@
-﻿using Meepl.Managers;
+﻿using Meepl.API.MercurialBlobs;
+using Meepl.API.MercurialBlobs.Responses;
+using Meepl.Managers;
 using Meepl.Models;
+using Meepl.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meepl.Controllers;
@@ -23,35 +26,35 @@ public class FriendController : ControllerBase
     /// <summary>
     /// Retrieves the list of friends for a user.
     /// </summary>
-    [HttpGet("friends/{userId}")]
-    public async Task<ActionResult<FriendList_Lookup>> GetFriendsAsync(ulong userId)
+    [HttpGet("friends")]
+    public async Task<ActionResult<byte[]>> GetFriendsAsync(ulong userId)
     {
         _logger.LogInformation("Fetching friends list for user: {UserId}", userId);
 
         if (!_friendManager.IsValidUserID(userId))
         {
             _logger.LogWarning("Invalid user ID: {UserId}", userId);
-            return BadRequest(new { Msg = "Invalid user ID." });
+            return File(new PersonListResponse()
+            {
+                Msg = ErrorCodes.FRIENDLIST_RETRIEVAL_INVALID_USER,
+                PersonListBlob = new PersonListBlob()
+            }.GetBytes(), "application/octet-stream");
         }
 
         var result = await _friendManager.GetFriendsAsync(userId);
-        if (result == null)
+        PersonListResponse response = new PersonListResponse()
         {
-            _logger.LogWarning("No friends found for user: {UserId}", userId);
-            return NotFound(new { Msg = "No friends found." });
-        }
+            PersonListBlob = result,
+            Msg = ErrorCodes.FRIENDLIST_RETRIEVAL_SUCCESS
+        };
 
-        return Ok(new FriendList_Lookup
-        {
-            UserId = userId,
-            Friends = result
-        });
+        return File(response.GetBytes(), "application/octet-stream");
     }
 
     /// <summary>
     /// Retrieves the list of blocked users for a user.
     /// </summary>
-    [HttpGet("blocked/{userId}")]
+    [HttpGet("blocked")]
     public async Task<ActionResult<BlockedUsers_Lookup>> GetBlockedUsersAsync(ulong userId)
     {
         _logger.LogInformation("Fetching blocked users for user: {UserId}", userId);
@@ -69,10 +72,11 @@ public class FriendController : ControllerBase
             return NotFound(new { Msg = "No blocked users found." });
         }
 
+        throw new NotImplementedException();
         return Ok(new BlockedUsers_Lookup
         {
             UserId = userId,
-            BlockedUsers = result
+            //BlockedUsers = result
         });
     }
 

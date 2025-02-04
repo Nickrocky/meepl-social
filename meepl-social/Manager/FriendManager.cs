@@ -1,4 +1,5 @@
 ﻿using Meepl.API;
+using Meepl.API.MercurialBlobs;
 using Meepl.Models;
 using Meepl.Social.Interfaces;
 using Meepl.Util;
@@ -10,6 +11,8 @@ public class FriendManager : IFriendManager
 {
     private static FriendManager instance;
     private static ISQLManager SQLManagerProvider;
+    private static Dictionary<ulong, PersonListBlob> FriendsListCache = new Dictionary<ulong, PersonListBlob>();
+    private static Dictionary<ulong, PersonListBlob> BlockedListCache = new Dictionary<ulong, PersonListBlob>();
 
     public static FriendManager Get()
     {
@@ -25,16 +28,19 @@ public class FriendManager : IFriendManager
         return (!TableboundIdentifier.Parse(userID).IsEmpty());
     }
 
-    public async Task<List<ulong>> GetFriendsAsync(ulong userId)
+    public async Task<PersonListBlob> GetFriendsAsync(ulong userId)
     {
-        return await SQLManagerProvider.
-        //return new List<ulong>();
+        if (FriendsListCache.ContainsKey(userId)) return FriendsListCache[userId];
+        var friendList = await SQLManagerProvider.GetFriendList(userId);
+        FriendsListCache.Add(userId, friendList);
+        return friendList;
     }
 
-    public async Task<List<ulong>> GetBlockedUsersAsync(ulong userId)
+    public async Task<PersonListBlob> GetBlockedUsersAsync(ulong userId)
     {
         var blocked = await GetBlockedUsersAsync(userId);
-        return new List<ulong>(blocked);
+        //return new List<ulong>(blocked);
+        throw new NotImplementedException();
     }
 
     public async Task<List<ulong>> GetFriendRequestsAsync(ulong userId)

@@ -48,5 +48,21 @@ public interface ISQLManager
     public Task<EventBlob> GetEvent(ulong eventIdentifier);
 
     #endregion
-    
+
+    #region Friends
+
+    /// <summary>
+    /// Gets the list of friends a person has from the database
+    /// </summary>
+    /// <returns>The person list blob</returns>
+    public Task<PersonListBlob> GetFriendList(ulong tableboundID);
+
+    /// <summary>
+    /// Gets the list of blocked people a person has from the database
+    /// </summary>
+    /// <returns>The person list blob</returns>
+    public Task<PersonListBlob> GetBlockList(ulong tableboundID);
+
+    #endregion
+
 }

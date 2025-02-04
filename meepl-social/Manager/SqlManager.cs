@@ -239,6 +239,41 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
+    public async Task<PersonListBlob> GetFriendList(ulong tableboundID)
+    {
+        string cmd = "SELECT FRIENDBLOB FROM FRIENDS WHERE ENTRYOWNER = $1;";
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        NpgsqlParameter[] parameters = 
+        {
+            new NpgsqlParameter() { Value = (long) tableboundID }
+        };
+        
+        var reader = await command.ExecuteReaderAsync();
+
+        PersonListBlob personListBlob = new PersonListBlob();        
+        if (reader.HasRows)
+        {
+            byte[] buffer = new byte[4096];
+            await reader.ReadAsync();
+
+            reader.GetBytes(0, 0, buffer, 0, 4096);
+            personListBlob.FromBytes(buffer);
+        }
+
+        await reader.DisposeAsync();
+        await connection.CloseAsync();
+
+        return personListBlob;
+    }
+
+    public Task<PersonListBlob> GetBlockList(ulong tableboundID)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task PutTableboundProfile(TableboundProfile profile)
     {
         string cmd = "INSERT INTO TABLEBOUND_PROFILE (TABLEBOUNDID, USERNAME, BIO, PROFILEPICTURE, CARDBACKGROUND, TITLE, STATUS) VALUES ($1, $2, $3, $4, $5, $6, $7);";

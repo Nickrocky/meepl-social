@@ -13,7 +13,7 @@ public class PersonListBlob : IMercurial
     /// <summary>
     /// List of all of the people in that person list
     /// </summary>
-    public List<TableboundIdentifier> PersonList { get; set; }
+    public List<TableboundIdentifier> PersonList = new List<TableboundIdentifier>();
 
     public byte[] GetBytes()
     {
@@ -30,7 +30,14 @@ public class PersonListBlob : IMercurial
 
     public void AppendComponentBytes(Pack packer)
     {
-        throw new NotSupportedException();
+        List<long> identifiers = new List<long>();
+        foreach (TableboundIdentifier identifier in PersonList)
+        {
+            identifiers.Add((long) identifier.Value);
+        }
+
+        packer
+            .Append(identifiers);
     }
 
     public void FromBytes(byte[] payload)
@@ -51,6 +58,16 @@ public class PersonListBlob : IMercurial
 
     public void ComponentFromBytes(Unpack unpack)
     {
-        throw new NotSupportedException();
+        List<TableboundIdentifier> tableboundIdentifiers = new List<TableboundIdentifier>();
+        List<long> longs = new List<long>();
+        unpack
+            .Read(ref longs);
+        
+        foreach (long val in longs)
+        {
+            tableboundIdentifiers.Add(TableboundIdentifier.Parse((ulong)val));
+        }
+
+        PersonList = tableboundIdentifiers;
     }
 }
