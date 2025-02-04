@@ -27,8 +27,8 @@ public class FriendManager : IFriendManager
 
     public async Task<List<ulong>> GetFriendsAsync(ulong userId)
     {
-        var friends = await GetFriendsAsync(userId);
-        return new List<ulong>(friends);
+        return await SQLManagerProvider.
+        //return new List<ulong>();
     }
 
     public async Task<List<ulong>> GetBlockedUsersAsync(ulong userId)
