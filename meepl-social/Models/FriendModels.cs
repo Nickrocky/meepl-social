@@ -2,23 +2,6 @@
 
 namespace Meepl.Models;
 
-/// <summary>
-/// Represents a lookup for a user's friends list.
-/// </summary>
-public struct FriendList_Lookup
-{
-    /// <summary>
-    /// The unique TableboundIdentifier for the user.
-    /// </summary>
-    [JsonProperty("user_id")]
-    public ulong UserId { get; set; }
-
-    /// <summary>
-    /// A list of friends for the user, identified by TableboundIdentifiers.
-    /// </summary>
-    [JsonProperty("friends")]
-    public List<ulong> Friends { get; set; }
-}
 
 /// <summary>
 /// Represents a lookup for blocked users.
@@ -78,6 +61,7 @@ public class FriendRequest
     /// </summary>
     [JsonProperty("friend_id")]
     public ulong FriendId { get; set; }
+    
 
     /// <summary>
     /// Optional message included in the friend request.
