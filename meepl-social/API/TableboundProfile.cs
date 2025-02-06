@@ -7,13 +7,21 @@ namespace Meepl.API
     /// </summary>
     public class TableboundProfile
     {
-        //Used to see if we need to update the database with the data in here on fixed intervals
+        #region Core Information
+
+        /// <summary>
+        /// Used for determining if a particular Tablebound Profile has not been synchronized to the database
+        /// </summary>
         [JsonIgnore] public bool IsDirty { get; set; }
         
-        //Base Profile Info
+        /// <summary>
+        /// This is the real representation of Tablebound Identifiers that is used by the server
+        /// </summary>
         [JsonIgnore] public TableboundIdentifier TableboundIdentifier { get; set; } //We dont want to send the tablebound id object
 
-        //This is a small private property that we can serialize in lieu of the Tablebound ID object
+        /// <summary>
+        /// This the the 'serialized' form of the Tablebound Identifier object
+        /// </summary>
         [JsonProperty("tableboundIdentifier")]
         private ulong flattenedTableboundIdentifier
         {
@@ -23,21 +31,71 @@ namespace Meepl.API
             }
         }
 
+        /// <summary>
+        /// This is a user's username
+        /// </summary>
         [JsonProperty("username")] public string Username { get; set;}
+        
+        /// <summary>
+        /// This is the brief description you can find on a users profile.
+        /// </summary>
         [JsonProperty("bio")] public string Bio { get; set;}
+        
+        /// <summary>
+        /// This is the status of a user, Ex. Online, Offline, Do Not Disturb etc.
+        /// </summary>
         [JsonProperty("status")] public StatusIndicator StatusIndicator { get; set;}
 
-        //Decorations
-        [JsonProperty("profilepicture")] public ulong ProfilePicture { get; set;}
-        [JsonProperty("background")] public ulong Background { get; set;}
-        [JsonProperty("title")] public ulong Title { get; set; }
-        [JsonProperty("visiblebadges")] public List<ulong> VisibleBadges { get; set; }
-        [JsonProperty("unlockedbadges")] public List<ulong> UnlockedBadges { get; set;}
+        #endregion
         
-        //Social Module
+        #region Decorations
+
+        /// <summary>
+        /// The Meepl Identifier for the Profile Picture (This likely will need to change)
+        /// </summary>
+        [JsonProperty("profilepicture")] public ulong ProfilePicture { get; set;}
+        /// <summary>
+        /// This is the legacy control for the Background of a Meepl Card
+        /// </summary>
+        [JsonProperty("background")] public ulong Background { get; set;}
+        
+        /// <summary>
+        /// This is a title that is unlocked in an experience world
+        /// </summary>
+        [JsonProperty("title")] public ulong Title { get; set; }
+        
+        /// <summary>
+        /// This is the set of badges you want to display on your profile
+        /// </summary>
+        [JsonProperty("visiblebadges")] public List<ulong> VisibleBadges { get; set; }
+        
+        /// <summary>
+        /// This is the set of all badges that are unlocked for a user.
+        /// </summary>
+        [JsonProperty("unlockedbadges")] public List<ulong> UnlockedBadges { get; set;}
+
+        #endregion
+        
+        #region Social Information
+
+        /// <summary>
+        /// The list of all tablebound IDs that this user is friends with
+        /// </summary>
         [JsonProperty("friendids")] public List<ulong> FriendIdentifiers { get; set;}
+        
+        /// <summary>
+        /// The list of all tablebound IDs that this user has blocked
+        /// </summary>
         [JsonProperty("blockedids")] public List<ulong> BlockedIdentifiers { get; set;}
+        
+        /// <summary>
+        /// The list of all club identifiers 
+        /// </summary>
         [JsonProperty("clubids")] public List<ulong> ClubIdentifiers { get; set;}
+
+        #endregion
+
+        #region Constructors
 
         public TableboundProfile(ulong tableboundIdentifier, StatusIndicator indicator, string username, string bio,
             ulong profilePicture, ulong background, ulong title, List<ulong> visibleBadges, List<ulong> unlockedBadges, List<ulong> friendIdentifiers,
@@ -101,6 +159,9 @@ namespace Meepl.API
             Title = 0;
         }
 
+
+        #endregion
+        
         /// <summary>
         /// Gets a clone of this profile but with all of the personal private information (Ex. Clubs, friends, block list) removed
         /// </summary>

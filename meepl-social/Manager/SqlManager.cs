@@ -70,7 +70,6 @@ public class SqlManager : ISQLManager
         var cmd3 = "SELECT FRIENDID FROM FRIENDS WHERE ENTRYOWNER = $1;";
         var cmd4 = "SELECT CLUBID FROM CLUB_MEMBERS WHERE MEMBERID = $1;";
         var cmd5 = "SELECT * FROM BADGES b INNER JOIN BADGE_MEMBERS bm ON bm.badgeid = b.badgeid WHERE bm.tableboundid = $1;";
-        //var cmd6 = "SELECT * FROM PASSKEYS WHERE TABLEBOUNDID = $1;"; //todo For when we add passkey login
         
         TableboundProfile publicProfile = await GetPublicTableboundProfile(tid);
         if (publicProfile.TableboundIdentifier.IsEmpty()) return new TableboundProfile();
