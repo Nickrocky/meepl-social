@@ -104,5 +104,4 @@ public interface ISQLManager
     public Task<PersonListBlob> GetBlockList(ulong tableboundID);
 
     #endregion
-
 }
