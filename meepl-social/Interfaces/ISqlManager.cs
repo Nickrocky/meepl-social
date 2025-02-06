@@ -98,10 +98,29 @@ public interface ISQLManager
     public Task<PersonListBlob> GetFriendList(ulong tableboundID);
 
     /// <summary>
+    /// Updates the person list blob for a profiles friend list
+    /// </summary>
+    /// <param name="personListBlob">The person list blob you want to use for the update</param>
+    /// <note> This function has an upsert behavior </note>
+    public Task UpdateFriendList(PersonListBlob personListBlob);
+    
+    #endregion
+
+    #region Blocked
+
+    /// <summary>
     /// Gets the list of blocked people a person has from the database
     /// </summary>
     /// <returns>The person list blob</returns>
     public Task<PersonListBlob> GetBlockList(ulong tableboundID);
+    
+    /// <summary>
+    /// Updates the person list blob for a profiles blocked list
+    /// </summary>
+    /// <param name="personListBlob">The person list blob you want to use for the update</param>
+    /// <note> This function has an upsert behavior </note>
+    public Task UpdateBlockList(PersonListBlob personListBlob);
 
     #endregion
+    
 }

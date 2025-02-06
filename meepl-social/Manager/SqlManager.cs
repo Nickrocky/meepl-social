@@ -202,7 +202,7 @@ public class SqlManager : ISQLManager
 
     public async Task<PersonListBlob> GetFriendList(ulong tableboundID)
     {
-        string cmd = "SELECT FRIENDBLOB FROM FRIENDS WHERE ENTRYOWNER = $1;";
+        string cmd = "SELECT FRIENDBLOB FROM FRIENDS_TABLE WHERE TABLEBOUNDID = $1;";
         var connection = CreateConnection();
         await connection.OpenAsync();
         var command = new NpgsqlCommand(cmd, connection);
@@ -230,10 +230,45 @@ public class SqlManager : ISQLManager
         return personListBlob;
     }
 
+    public async Task UpdateFriendList(PersonListBlob personListBlob)
+    {
+        
+    }
+    
     #endregion
 
     #region Block
-    public Task<PersonListBlob> GetBlockList(ulong tableboundID)
+    public async Task<PersonListBlob> GetBlockList(ulong tableboundID)
+    {
+        string cmd = "SELECT BLOCKEDBLOB FROM BLOCKED_TABLE WHERE TABLEBOUNDID = $1;";
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        NpgsqlParameter[] parameters = 
+        {
+            new NpgsqlParameter() { Value = (long) tableboundID }
+        };
+        
+        var reader = await command.ExecuteReaderAsync();
+
+        PersonListBlob personListBlob = new PersonListBlob();        
+        if (reader.HasRows)
+        {
+            byte[] buffer = new byte[4096];
+            await reader.ReadAsync();
+
+            reader.GetBytes(0, 0, buffer, 0, 4096);
+            personListBlob.FromBytes(buffer);
+        }
+
+        await reader.DisposeAsync();
+        await connection.CloseAsync();
+
+        return personListBlob;
+    }
+
+    public Task UpdateBlockList(PersonListBlob personListBlob)
     {
         throw new NotImplementedException();
     }
