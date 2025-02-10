@@ -35,6 +35,28 @@ public interface ISQLManager
     /// <param name="badgeIdentifier">The identifier for the badge in the database</param>
     /// <returns>The badge associated to that identifier in the database.</returns>
     public Task<BadgeBlob> GetBadge(ulong badgeIdentifier);
+    
+    /// <summary>
+    /// Inserts a badge blob entry into the database for a given badge
+    /// </summary>
+    /// <param name="badge">The badge you want to insert into the database</param>
+    public Task InsertBadge(BadgeBlob badge);
+    
+    /// <summary>
+    /// Updates a badge blob in database to reflect the supplied badge blob
+    /// </summary>
+    /// <param name="badge">The badge you want use to update the database entry</param>
+    public Task UpdateBadge(BadgeBlob badge);
+    
+    /// <summary>
+    /// Deletes a badge blob from the database
+    /// </summary>
+    /// <note>
+    /// This is incredibly unlikely to occur but its here nonetheless
+    /// </note>
+    /// <param name="badge">The badge you want to find and delete from the database/param>
+    public Task DeleteBadge(BadgeBlob badge);
+    
 
     #endregion
 
@@ -47,6 +69,24 @@ public interface ISQLManager
     /// <returns>The event associated to that identifier in the database</returns>
     public Task<EventBlob> GetEvent(ulong eventIdentifier);
 
+    /// <summary>
+    /// Adds a new entry to the database for a given event
+    /// </summary>
+    /// <param name="eventBlob">The event you want to add to the database</param>
+    public Task InsertEvent(EventBlob eventBlob);
+    
+    /// <summary>
+    /// Deletes an entry from the database
+    /// </summary>
+    /// <param name="eventBlob">The event you are looking to delete</param>
+    public Task DeleteEvent(EventBlob eventBlob);
+    
+    /// <summary>
+    /// Updates the information for a given entry in the database
+    /// </summary>
+    /// <param name="eventBlob">The event info you want to be in the database</param>
+    public Task UpdateEvent(EventBlob eventBlob);
+    
     #endregion
 
     #region Friends
@@ -58,11 +98,29 @@ public interface ISQLManager
     public Task<PersonListBlob> GetFriendList(ulong tableboundID);
 
     /// <summary>
+    /// Updates the person list blob for a profiles friend list
+    /// </summary>
+    /// <param name="personListBlob">The person list blob you want to use for the update</param>
+    /// <note> This function has an upsert behavior </note>
+    public Task UpdateFriendList(PersonListBlob personListBlob);
+    
+    #endregion
+
+    #region Blocked
+
+    /// <summary>
     /// Gets the list of blocked people a person has from the database
     /// </summary>
     /// <returns>The person list blob</returns>
     public Task<PersonListBlob> GetBlockList(ulong tableboundID);
+    
+    /// <summary>
+    /// Updates the person list blob for a profiles blocked list
+    /// </summary>
+    /// <param name="personListBlob">The person list blob you want to use for the update</param>
+    /// <note> This function has an upsert behavior </note>
+    public Task UpdateBlockList(PersonListBlob personListBlob);
 
     #endregion
-
+    
 }
