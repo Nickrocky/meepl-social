@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Meepl.API;
 using Meepl.API.Enums;
 
@@ -7,10 +6,6 @@ namespace Meepl.Managers;
 public class ProfileManager
 {
     private static Dictionary<ulong, TableboundProfile> Profiles = new Dictionary<ulong, TableboundProfile>();
-    private static Dictionary<ulong, PlatformProfile> MetaProfiles = new Dictionary<ulong, PlatformProfile>();
-    private static Dictionary<ulong, PlatformProfile> SteamProfiles = new Dictionary<ulong, PlatformProfile>();
-    private static Dictionary<ulong, PlatformProfile> AppleProfiles = new Dictionary<ulong, PlatformProfile>();
-    public static List<ulong> MetaRegistrationRequest = new List<ulong>();
     
     private const ulong DEFAULT_PFP = 4294967296; //The Overrealms Icon Universe ID
     
