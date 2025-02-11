@@ -26,22 +26,21 @@ public class FriendManager : IFriendManager
         SQLManagerProvider = sqlManager;
     }
 
-    public bool IsValidUserID(ulong userID)
+    public bool IsValidUserID(ulong tableboundID)
     {
-        return (!MeeplIdentifier.Parse(userID).IsEmpty());
+        return (!MeeplIdentifier.Parse(tableboundID).IsEmpty());
     }
 
     /// <summary>
     /// Retrieves User's Friend List from Cache
     /// </summary>
-    /// <param name="userId"></param>
-    ///
+    /// <param name="tableboundID"></param>
     /// <returns></returns>
-    public async Task<PersonListBlob> GetFriendsAsync(ulong userId)
+    public async Task<PersonListBlob> GetFriendsAsync(ulong tableboundID)
     {
-        if (FriendsListCache.ContainsKey(userId)) return FriendsListCache[userId];
-        var friendList = await SQLManagerProvider.GetFriendList(userId);
-        FriendsListCache.Add(userId, friendList);
+        if (FriendsListCache.ContainsKey(tableboundID)) return FriendsListCache[tableboundID];
+        var friendList = await SQLManagerProvider.GetFriendList(MeeplIdentifier.Parse(tableboundID));
+        FriendsListCache.Add(tableboundID, friendList);
         return friendList;
     }
 
@@ -50,50 +49,53 @@ public class FriendManager : IFriendManager
     /// </summary>
     /// <param name="requesterId"></param>
     /// <returns></returns>
-    public async Task<PersonListBlob> GetBlockedUsersAsync(ulong userId)
+    public async Task<PersonListBlob> GetBlockedUsersAsync(ulong tableboundID)
     {
 
-        if (BlockedListCache.ContainsKey(userId)) return BlockedListCache[userId];
-        var blockList = await SQLManagerProvider.GetBlockList(userId);
-        BlockedListCache.Add(userId, blockList);
+        if (BlockedListCache.ContainsKey(tableboundID)) return BlockedListCache[tableboundID];
+        var blockList = await SQLManagerProvider.GetBlockList(MeeplIdentifier.Parse(tableboundID));
+        BlockedListCache.Add(tableboundID, blockList);
         return blockList;
     }
 
-    public async Task<PersonListBlob> GetFriendRequestsAsync(ulong userId)
+    public async Task<PersonListBlob> GetFriendRequestsAsync(ulong tableboundID)
     {
-        if (FriendRequestCache.ContainsKey(userId)) return FriendRequestCache[userId];
-        var friendRequestList = await SQLManagerProvider.GetFriendRequestList(userId);
-        FriendRequestCache.Add(userId, friendRequestList);
+        if (FriendRequestCache.ContainsKey(tableboundID)) return FriendRequestCache[tableboundID];
+        var friendRequestList = await SQLManagerProvider.GetFriendRequestList(tableboundID);
+        FriendRequestCache.Add(tableboundID, friendRequestList);
+        return friendRequestList;
     }
 
-    public async Task<PersonListBlob> AddFriendAsync(ulong requesterId, ulong friendId)
+        public async Task<PersonListBlob> AddFriendAsync(ulong requesterId, ulong friendId)
+        { 
+            throw new NotImplementedException();
+         }
+        
+        public async Task<PersonListBlob> RemoveFriendAsync(ulong requesterId, ulong friendId)
         {
-            //await SQLManagerProvider.A
             throw new NotImplementedException();
         }
-
-        public async Task<bool> RemoveFriendAsync(ulong requesterId, ulong friendId)
-        {
-            throw new NotImplementedException();
-        }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requesterId"></param>
+        /// <param name="blockedUserId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public async Task<PersonListBlob> BlockUserAsync(ulong requesterId, ulong blockedUserId)
         {
-            await SQLManagerProvider.UpdateBlockList(requesterId, blockedUserId);
-            ;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Uses the BlockedListCache to remove user to Block List
+        /// 
         /// </summary>
         /// <param name="requesterId"></param>
         /// <param name="blockedUserId"></param>
         /// <returns></returns>
         public async Task<PersonListBlob> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
         {
-            if (BlockedListCache.ContainsKey(requesterId)) return BlockedListCache[requesterId];
-            var blockList = await SQLManagerProvider.GetBlockList(requesterId);
-            BlockedListCache.Add(blockedUserId, blockList);
-            return blockList;
+           throw new NotImplementedException();
         }
     }

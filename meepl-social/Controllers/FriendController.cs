@@ -115,7 +115,7 @@ public class FriendController : ControllerBase
         }
 
         var success = await _friendManager.AddFriendAsync(request.RequesterId, request.FriendId);
-        if (!success)
+        if (success == null)
         {
             _logger.LogWarning("Failed to add friend for {RequesterId}", request.RequesterId);
             return StatusCode(500, new { Msg = "Failed to add friend." });

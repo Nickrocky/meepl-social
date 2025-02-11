@@ -106,7 +106,7 @@ public class SqlManager : ISQLManager
     {
         throw new NotImplementedException();
     }
-
+    
     public async Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier meeplIdentifier)
     {
         throw new NotImplementedException();
@@ -138,7 +138,25 @@ public class SqlManager : ISQLManager
 
     public async Task UpdateBadge(BadgeBlob badge)
     {
-        throw new NotImplementedException();
+        if (profile.BadgeBlob.IsEmpty()) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "UPDATE TABLEBOUND_PROFILE SET USERNAME = $1, BIO = $2, ACTION = $3, ICONCDNLINK = $4, STATUS = $5 WHERE TABLEBOUND_ID = $6;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter(){ Value = profile.Username },
+            new NpgsqlParameter(){ Value = profile.Biography },
+            new NpgsqlParameter(){ Value = profile.Action },
+            new NpgsqlParameter(){ Value = profile.ProfileCDNLink },
+            new NpgsqlParameter(){ Value = (short) profile.Indicator },
+            new NpgsqlParameter(){ Value = (long) profile.MeeplIdentifier.Container }
+        });
+
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
     }
 
     public async Task DeleteBadge(BadgeBlob badge)

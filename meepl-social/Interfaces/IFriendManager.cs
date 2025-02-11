@@ -15,28 +15,28 @@ public interface IFriendManager
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a boolean indicating validity.</returns>
-    public bool IsValidUserID(ulong userID);
-    
+    public bool IsValidUserID(ulong tableboundID);
+
     /// <summary>
     /// Retrieves the friends list of a user.
     /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="tableboundID">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friends.</returns>
-    Task<PersonListBlob> GetFriendsAsync(ulong userId);
+    Task<PersonListBlob> GetFriendsAsync(ulong tableboundID);
 
     /// <summary>
     /// Retrieves the list of blocked users for a user.
     /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="tableboundID">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of blocked users.</returns>
-    Task<PersonListBlob> GetBlockedUsersAsync(ulong userId);
+    Task<PersonListBlob> GetBlockedUsersAsync(ulong tableboundID);
 
     /// <summary>
     /// Retrieves the friend requests for a user.
     /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="tableboundID">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friend requests.</returns>
-    Task<PersonListBlob> GetFriendRequestsAsync(ulong userId);
+    Task<PersonListBlob> GetFriendRequestsAsync(ulong tableboundID);
 
     /// <summary>
     /// Adds a friend for the user.
