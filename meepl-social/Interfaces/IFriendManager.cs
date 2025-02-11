@@ -1,7 +1,4 @@
-﻿using Meepl.API;
-using Meepl.API.MercurialBlobs;
-using Meepl.Models;
-using Meepl.Util;
+﻿using Meepl.API.MercurialBlobs;
 
 namespace Meepl.Social.Interfaces;
 
@@ -36,7 +33,7 @@ public interface IFriendManager
     /// </summary>
     /// <param name="tableboundID">The unique identifier of the user.</param>
     /// <returns>A task that resolves to a list of friend requests.</returns>
-    Task<PersonListBlob> GetFriendRequestsAsync(ulong tableboundID);
+    Task<List<FriendRequestBlob>> GetFriendRequestsAsync(ulong tableboundID);
 
     /// <summary>
     /// Adds a friend for the user.
@@ -44,7 +41,7 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user sending the request.</param>
     /// <param name="friendId">The ID of the user to add as a friend.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<PersonListBlob> AddFriendAsync(ulong requesterId, ulong friendId);
+    Task AddFriendAsync(ulong requesterId, ulong friendId);
 
     /// <summary>
     /// Removes a friend for the user.
@@ -52,7 +49,7 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user removing the friend.</param>
     /// <param name="friendId">The ID of the friend to remove.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<PersonListBlob> RemoveFriendAsync(ulong requesterId, ulong friendId);
+    Task RemoveFriendAsync(ulong requesterId, ulong friendId);
 
     /// <summary>
     /// Blocks a user.
@@ -60,7 +57,7 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user performing the block.</param>
     /// <param name="blockedUserId">The ID of the user to block.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<PersonListBlob> BlockUserAsync(ulong requesterId, ulong blockedUserId);
+    Task BlockUserAsync(ulong requesterId, ulong blockedUserId);
 
     /// <summary>
     /// Unblocks a user.
@@ -68,5 +65,5 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user performing the unblock.</param>
     /// <param name="blockedUserId">The ID of the user to unblock.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<PersonListBlob> UnblockUserAsync(ulong requesterId, ulong blockedUserId);
+    Task UnblockUserAsync(ulong requesterId, ulong blockedUserId);
 }
