@@ -148,7 +148,7 @@ public class SqlManager : ISQLManager
         var connection = CreateConnection();
         await connection.OpenAsync();
 
-        var cmd = "UPDATE BADGES SET  = BADGE_ID = $1, BADGE_BLOB = $2, BLOBHASH = $3 WHERE BADGE_ID = $1;";
+        var cmd = "UPDATE BADGES SET  BADGE_ID = $1, BADGE_BLOB = $2, BLOBHASH = $3 WHERE BADGE_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
@@ -187,7 +187,8 @@ public class SqlManager : ISQLManager
 
     public async Task UpdateEvent(EventBlob eventBlob)
     {
-        throw new NotImplementedException();
+        if(eventBlob.EventHostId == 0) return;
+        
     }
 
     #endregion
