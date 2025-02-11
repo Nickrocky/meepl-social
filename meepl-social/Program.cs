@@ -88,6 +88,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 SqlManager manager = new SqlManager();
+manager.Init();
 
 ProfileManager profileManager = new ProfileManager();
 profileManager.Init(manager);

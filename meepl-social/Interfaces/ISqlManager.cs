@@ -17,14 +17,14 @@ public interface ISQLManager
     /// </summary>
     /// <param name="tid">The tablebound id you want to query with</param>
     /// <returns>The tablebound profile associated with that id</returns>
-    Task<TableboundProfile> GetTableboundProfile(MeeplIdentifier tid);
+    Task<MeeplProfile> GetTableboundProfile(MeeplIdentifier tid);
     
     /// <summary>
     /// Updates the Tablebound profile of the user specified
     /// </summary>
     /// <param name="profile">The profile of the person you want to update</param>
-    /// <returns></returns>
-    Task UpdateTableboundProfile(TableboundProfile profile);
+    /// <note>THIS ONLY UPDATES THE MAIN TABLE 'TABLEBOUND_PROFILE' FOR A PROFILE</note>
+    Task UpdateTableboundProfile(MeeplProfile profile);
 
     /// <summary>
     /// Grants a Badge to a Player
@@ -47,6 +47,13 @@ public interface ISQLManager
     /// <param name="meeplIdentifier">The players identifier</param>
     /// <returns>The event container for that player</returns>
     Task<EventContainerBlob> GetEventContainer(MeeplIdentifier meeplIdentifier);
+
+    /// <summary>
+    /// Gets all of the organizations this player is associated to
+    /// </summary>
+    /// <param name="meeplIdentifier">The players identifier</param>
+    /// <returns>The clubs and clans this player is a part of</returns>
+    Task<OrganizationContainerBlob> GetOrganizationContainer(MeeplIdentifier meeplIdentifier);
     
     #endregion
 
@@ -130,7 +137,7 @@ public interface ISQLManager
     /// Gets the list of friend requests for a user from database
     /// </summary>
     /// <returns>The person list blob</returns>
-    public Task<PersonListBlob> GetFriendRequestList(ulong tableboundID);
+    public Task<List<FriendRequestBlob>> GetFriendRequestList(MeeplIdentifier tableboundID);
     
     #endregion
 

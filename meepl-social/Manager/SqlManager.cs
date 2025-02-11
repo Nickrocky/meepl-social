@@ -26,8 +26,10 @@ public class SqlManager : ISQLManager
 
     #region Tablebound Profile
 
-    public async Task<TableboundProfile> GetTableboundProfile(MeeplIdentifier tid)
+    public async Task<MeeplProfile> GetTableboundProfile(MeeplIdentifier tid)
     {
+        if (tid.IsEmpty()) return new MeeplProfile();
+        
         var connection = CreateConnection();
         await connection.OpenAsync();
 
@@ -35,73 +37,69 @@ public class SqlManager : ISQLManager
         var blockBlob = await GetBlockList(tid);
         var badgeBlob = await GetBadgeContainer(tid);
         var eventBlob = await GetEventContainer(tid);
+        var clubBlob = await GetOrganizationContainer(tid);
+        var friendRequestBlob = await GetFriendRequestList(tid);
 
+        var cmd = "SELECT * FROM TABLEBOUND_PROFILE WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid.Container});
 
-    }
-    
-    /*public async Task<TableboundProfile> GetTableboundProfile(ulong tid)
-    {
-        var connection = CreateConnection();
-        await connection.OpenAsync();
-        var cmd2 = "SELECT BLOCKEDID FROM BLOCKED WHERE ENTRYOWNER = $1;";
-        var cmd3 = "SELECT FRIENDID FROM FRIENDS WHERE ENTRYOWNER = $1;";
-        var cmd4 = "SELECT CLUBID FROM CLUB_MEMBERS WHERE MEMBERID = $1;";
-        var cmd5 = "SELECT * FROM BADGES b INNER JOIN BADGE_MEMBERS bm ON bm.badgeid = b.badgeid WHERE bm.tableboundid = $1;";
-        //var cmd6 = "SELECT * FROM PASSKEYS WHERE TABLEBOUNDID = $1;"; //todo For when we add passkey login
-        
-        TableboundProfile publicProfile = await GetPublicTableboundProfile(tid);
-        if (publicProfile.TableboundIdentifier.IsEmpty()) return new TableboundProfile();
-        //Actually build that blocked list
-        var command = new NpgsqlCommand(cmd2, connection);
-        command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid});
-        List<ulong> blockedUsers = new List<ulong>();
         var reader = await command.ExecuteReaderAsync();
-        //Console.WriteLine("Has Rows: " + reader.HasRows + " Rows: " + reader.Rows);
-        while (await reader.ReadAsync())
-        {
-            blockedUsers.Add((ulong) reader.GetInt64(0));
-        }
-        await reader.CloseAsync();
-        
-        //Actually build that friends list
-        command = new NpgsqlCommand(cmd3, connection);
-        command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid});
-        List<ulong> friends = new List<ulong>();
-        reader = await command.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            friends.Add((ulong) reader.GetInt64(0));
-        }
-        await reader.CloseAsync();
-        
-        //Actually build that club list
-        command = new NpgsqlCommand(cmd4, connection);
-        command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid});
-        List<ulong> clubs = new List<ulong>();
-        reader = await command.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            clubs.Add((ulong) reader.GetInt64(0));
-        }
-        await reader.CloseAsync();
 
-        //Finally build the badge list
-        command = new NpgsqlCommand(cmd5, connection);
-        command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid});
-        List<ulong> unlockedBadgeList = new List<ulong>();
-        reader = await command.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            unlockedBadgeList.Add((ulong)reader.GetInt64(2));
-        }
+        if (!reader.HasRows) return new MeeplProfile();
+
+        await reader.ReadAsync();
+
+        var username = reader.GetString(1);
+        var bio = reader.GetString(2);
+        var action = reader.GetString(3);
+        var cdnlink = reader.GetString(4);
+        var status = (StatusIndicator)reader.GetInt16(5);
+
         await reader.DisposeAsync();
         await connection.CloseAsync();
-        return new TableboundProfile(publicProfile, friends, blockedUsers, clubs, unlockedBadgeList);
-    }*/
+        
+        return new MeeplProfile()
+        {
+            Username = username,
+            Action = action,
+            Biography = bio,
+            ProfileCDNLink = cdnlink,
+            Indicator = status,
+            Clans = clubBlob.Clans,
+            Clubs = clubBlob.Clubs,
+            Events = eventBlob.Events,
+            BlockedList = blockBlob,
+            FriendsList = friendBlob,
+            MeeplIdentifier = tid,
+            UniverseTitle = 0,
+            Unlocked_Badges = badgeBlob.Unlocked_Badges,
+            Visible_Badges = badgeBlob.Visible_Badges,
+            FriendRequestBlobs = friendRequestBlob
+        };
+    }
 
-    public Task UpdateTableboundProfile(TableboundProfile profile)
+    public async Task UpdateTableboundProfile(MeeplProfile profile)
     {
-        throw new NotImplementedException();
+        if (profile.MeeplIdentifier.IsEmpty()) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "UPDATE TABLEBOUND_PROFILE SET USERNAME = $1, BIO = $2, ACTION = $3, ICONCDNLINK = $4, STATUS = $5 WHERE TABLEBOUND_ID = $6;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter(){ Value = profile.Username },
+            new NpgsqlParameter(){ Value = profile.Biography },
+            new NpgsqlParameter(){ Value = profile.Action },
+            new NpgsqlParameter(){ Value = profile.ProfileCDNLink },
+            new NpgsqlParameter(){ Value = (short) profile.Indicator },
+            new NpgsqlParameter(){ Value = (long) profile.MeeplIdentifier.Container }
+        });
+
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
     }
 
     public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, MeeplIdentifier identifier)
@@ -116,12 +114,17 @@ public class SqlManager : ISQLManager
 
     public async Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier meeplIdentifier)
     {
-        
+        throw new NotImplementedException();
     }
 
     public async Task<EventContainerBlob> GetEventContainer(MeeplIdentifier meeplIdentifier)
     {
-        
+        throw new NotImplementedException();
+    }
+
+    public async Task<OrganizationContainerBlob> GetOrganizationContainer(MeeplIdentifier meeplIdentifier)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
@@ -178,32 +181,7 @@ public class SqlManager : ISQLManager
 
     public async Task<PersonListBlob> GetFriendList(MeeplIdentifier tableboundID)
     {
-        string cmd = "SELECT FRIENDBLOB FROM FRIENDS WHERE ENTRYOWNER = $1;";
-        var connection = CreateConnection();
-        await connection.OpenAsync();
-        var command = new NpgsqlCommand(cmd, connection);
-        
-        NpgsqlParameter[] parameters = 
-        {
-            new NpgsqlParameter() { Value = (long) tableboundID.Container }
-        };
-        
-        var reader = await command.ExecuteReaderAsync();
-
-        PersonListBlob personListBlob = new PersonListBlob();        
-        if (reader.HasRows)
-        {
-            byte[] buffer = new byte[4096];
-            await reader.ReadAsync();
-
-            reader.GetBytes(0, 0, buffer, 0, 4096);
-            personListBlob.FromBytes(buffer);
-        }
-
-        await reader.DisposeAsync();
-        await connection.CloseAsync();
-
-        return personListBlob;
+        throw new NotImplementedException();
     }
 
     public async Task UpdateFriendList(PersonListBlob personListBlob)
@@ -211,7 +189,7 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
-    public async Task<PersonListBlob> GetFriendRequestList(ulong tableboundID)
+    public async Task<List<FriendRequestBlob>> GetFriendRequestList(MeeplIdentifier tableboundID)
     {
         throw new NotImplementedException();
     }

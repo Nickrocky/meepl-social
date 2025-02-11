@@ -104,6 +104,15 @@ public class MeeplProfile : IMercurial
     public List<long> Clans = new List<long>();
 
     #endregion
+
+    #region Constructors
+
+    public MeeplProfile()
+    {
+        
+    }
+
+    #endregion
     
     #region Mercurial Serialization
 
