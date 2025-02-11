@@ -66,12 +66,12 @@ public class FriendManager : IFriendManager
         return friendRequestList;
     }
 
-        public async Task<PersonListBlob> AddFriendAsync(ulong requesterId, ulong friendId)
+        public async Task AddFriendAsync(ulong requesterId, ulong friendId)
         { 
             throw new NotImplementedException();
          }
         
-        public async Task<PersonListBlob> RemoveFriendAsync(ulong requesterId, ulong friendId)
+        public async Task RemoveFriendAsync(ulong requesterId, ulong friendId)
         {
             throw new NotImplementedException();
         }
@@ -83,7 +83,7 @@ public class FriendManager : IFriendManager
         /// <param name="blockedUserId"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<PersonListBlob> BlockUserAsync(ulong requesterId, ulong blockedUserId)
+        public async Task BlockUserAsync(ulong requesterId, ulong blockedUserId)
         {
             throw new NotImplementedException();
         }
@@ -94,7 +94,7 @@ public class FriendManager : IFriendManager
         /// <param name="requesterId"></param>
         /// <param name="blockedUserId"></param>
         /// <returns></returns>
-        public async Task<PersonListBlob> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
+        public async Task UnblockUserAsync(ulong requesterId, ulong blockedUserId)
         {
            throw new NotImplementedException();
         }
