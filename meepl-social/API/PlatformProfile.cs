@@ -34,7 +34,7 @@ public class PlatformProfile
     public PlatformProfile()
     {
         PlatformIdentifier = 0;
-        MeeplIdentifier = MeeplIdentifier.CreateEmpty();
+        MeeplIdentifier = new MeeplIdentifier();
         Type = AccountType.UNKNOWN;
     }
 

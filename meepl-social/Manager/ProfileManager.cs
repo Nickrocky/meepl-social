@@ -65,7 +65,7 @@ public class ProfileManager
     /// </summary>
     public static void AddDebugProfile(TableboundProfile profile)
     {
-        Profiles.Add(profile.MeeplIdentifier.Value, profile);
+        Profiles.Add(profile.MeeplIdentifier.Container, profile);
     }
 
     /// <summary>
