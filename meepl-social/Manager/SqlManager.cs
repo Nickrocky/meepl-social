@@ -177,9 +177,21 @@ public class SqlManager : ISQLManager
         var connection = CreateConnection();
         await connection.OpenAsync();
         
-        var 
+        var cmd = "SELECT * FROM BADGE_BLOB WHERE BADGE_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
         
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long)badgeIdentifier });
         
+        var reader = await command.ExecuteReaderAsync();
+        
+        if (!reader.HasRows) return new BadgeBlob();
+        await reader.ReadAsync();
+        
+        var badgeID = reader.GetInt64(0);
+        var badgeBlob = reader.GetBytes();
+
+
+
     }
 
     public async Task InsertBadge(BadgeBlob badge)
