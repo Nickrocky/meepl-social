@@ -72,12 +72,7 @@ public class FriendController : ControllerBase
             return NotFound(new { Msg = "No blocked users found." });
         }
 
-        throw new NotImplementedException();
-        return Ok(new BlockedUsers_Lookup
-        {
-            UserId = userId,
-            //BlockedUsers = result
-        });
+        return Ok(result);
     }
 
     /// <summary>
@@ -128,5 +123,33 @@ public class FriendController : ControllerBase
 
         _logger.LogInformation("Successfully added friend for {RequesterId}", request.RequesterId);
         return Ok(new { Msg = "Friend added successfully." });
+    }
+    
+    /// <summary>
+    /// Handles a blocking a user
+    /// </summary>
+    [HttpPost("block")]
+    public async Task<ActionResult<byte[]>> BlockUserAsync(ulong requesterId, ulong blockedUserId)
+    {
+        //_logger.LogInformation("Fetching friends list for user: {requesterId}", requesterId);
+
+        if (!_friendManager.IsValidUserID(requesterId))
+        {
+            _logger.LogWarning("Invalid user ID: {requesterId}", requesterId);
+            return File(new PersonListResponse()
+            {
+                Msg = ErrorCodes.BLOCK_USER_INVALID_USER,
+                PersonListBlob = new PersonListBlob()
+            }.GetBytes(), "application/octet-stream");
+        }
+
+        var result = await _friendManager.BlockUserAsync(requesterId, blockedUserId);
+        PersonListResponse response = new PersonListResponse()
+        {
+            PersonListBlob = result,
+            Msg = ErrorCodes.BLOCK_USER_SUCCESS
+        };
+
+        return File(response.GetBytes(), "application/octet-stream");
     }
 }

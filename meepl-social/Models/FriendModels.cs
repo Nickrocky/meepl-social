@@ -70,4 +70,21 @@ public class FriendRequest
     public string Message { get; set; }
 }
 
+/// <summary>
+/// Represents blocking a user.
+/// </summary>
+public class BlockUser
+{
+    /// <summary>
+    /// The unique TableboundIdentifier of the user sending the friend request.
+    /// </summary>
+    [JsonProperty("requester_id")]
+    public ulong RequesterId { get; set; }
 
+    /// <summary>
+    /// The unique TableboundIdentifier of the user to be blocked.
+    /// </summary>
+    [JsonProperty("blockedUserId")]
+    public ulong BlockedUserId { get; set; }
+    
+}

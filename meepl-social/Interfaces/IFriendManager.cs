@@ -60,7 +60,7 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user performing the block.</param>
     /// <param name="blockedUserId">The ID of the user to block.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<bool> BlockUserAsync(ulong requesterId, ulong blockedUserId);
+    Task<PersonListBlob> BlockUserAsync(ulong requesterId, ulong blockedUserId);
 
     /// <summary>
     /// Unblocks a user.
@@ -68,5 +68,5 @@ public interface IFriendManager
     /// <param name="requesterId">The ID of the user performing the unblock.</param>
     /// <param name="blockedUserId">The ID of the user to unblock.</param>
     /// <returns>A task that resolves to a boolean indicating success.</returns>
-    Task<bool> UnblockUserAsync(ulong requesterId, ulong blockedUserId);
+    Task<PersonListBlob> UnblockUserAsync(ulong requesterId, ulong blockedUserId);
 }
