@@ -162,7 +162,7 @@ public class SqlManager : ISQLManager
         
         var reader = await command.ExecuteReaderAsync();
 
-        BadgeContainerBlob blob = new BadgeContainerBlob();
+        EventContainerBlob blob = new EventContainerBlob();
         if (reader.HasRows)
         {
             await reader.ReadAsync();
