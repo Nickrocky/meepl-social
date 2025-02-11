@@ -1,5 +1,6 @@
 using Meepl.API.MercurialBlobs;
 using Meepl.API.MercurialBlobs.Badges;
+using Meepl.API.MercurialBlobs.Events;
 
 namespace Meepl.API;
 
@@ -40,6 +41,13 @@ public interface ISQLManager
     /// <returns>The badge container for that player</returns>
     Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier identifier);
 
+    /// <summary>
+    /// Gets a players event container containing all of the events they are registered to attend
+    /// </summary>
+    /// <param name="meeplIdentifier">The players identifier</param>
+    /// <returns>The event container for that player</returns>
+    Task<EventContainerBlob> GetEventContainer(MeeplIdentifier meeplIdentifier);
+    
     #endregion
 
     #region Badges

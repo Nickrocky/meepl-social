@@ -2,6 +2,7 @@ using Meepl.API;
 using Meepl.API.Enums;
 using Meepl.API.MercurialBlobs;
 using Meepl.API.MercurialBlobs.Badges;
+using Meepl.API.MercurialBlobs.Events;
 using Meepl.Social.Interfaces;
 using Npgsql;
 
@@ -25,7 +26,7 @@ public class SqlManager : ISQLManager
 
     #region Tablebound Profile
 
-    public async Task<TableboundProfile> GetTableboundProfile(ulong tid)
+    public async Task<TableboundProfile> GetTableboundProfile(MeeplIdentifier tid)
     {
         var connection = CreateConnection();
         await connection.OpenAsync();
@@ -33,6 +34,7 @@ public class SqlManager : ISQLManager
         var friendBlob = await GetFriendList(tid);
         var blockBlob = await GetBlockList(tid);
         var badgeBlob = await GetBadgeContainer(tid);
+        var eventBlob = await GetEventContainer(tid);
 
 
     }
@@ -102,12 +104,22 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
+    public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, MeeplIdentifier identifier)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, TableboundProfile profile)
     {
         throw new NotImplementedException();
     }
 
-    public async Task GetBadgeContainer(MeeplIdentifier meeplIdentifier)
+    public async Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier meeplIdentifier)
+    {
+        
+    }
+
+    public async Task<EventContainerBlob> GetEventContainer(MeeplIdentifier meeplIdentifier)
     {
         
     }
@@ -164,7 +176,7 @@ public class SqlManager : ISQLManager
 
     #region Friend List
 
-    public async Task<PersonListBlob> GetFriendList(ulong tableboundID)
+    public async Task<PersonListBlob> GetFriendList(MeeplIdentifier tableboundID)
     {
         string cmd = "SELECT FRIENDBLOB FROM FRIENDS WHERE ENTRYOWNER = $1;";
         var connection = CreateConnection();
@@ -173,7 +185,7 @@ public class SqlManager : ISQLManager
         
         NpgsqlParameter[] parameters = 
         {
-            new NpgsqlParameter() { Value = (long) tableboundID }
+            new NpgsqlParameter() { Value = (long) tableboundID.Container }
         };
         
         var reader = await command.ExecuteReaderAsync();
@@ -199,12 +211,17 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
+    public async Task<PersonListBlob> GetFriendRequestList(ulong tableboundID)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
 
     #region Block List
     
-    public Task<PersonListBlob> GetBlockList(ulong tableboundID)
+    public Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID)
     {
         throw new NotImplementedException();
     }
