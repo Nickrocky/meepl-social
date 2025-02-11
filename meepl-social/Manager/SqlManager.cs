@@ -163,7 +163,21 @@ public class SqlManager : ISQLManager
 
     public async Task DeleteBadge(BadgeBlob badge)
     {
-        throw new NotImplementedException();
+        if (badge.ID == 0) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        
+        var cmd = "DELETE FROM BADGES WHERE BADGE_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter(){ Value = badge.ID },
+        });
+
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
     }
 
     #endregion
@@ -187,8 +201,7 @@ public class SqlManager : ISQLManager
 
     public async Task UpdateEvent(EventBlob eventBlob)
     {
-        if(eventBlob.EventHostId == 0) return;
-        
+        throw new NotImplementedException();   
     }
 
     #endregion
