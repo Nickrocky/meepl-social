@@ -104,22 +104,66 @@ public class SqlManager : ISQLManager
 
     public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, MeeplIdentifier identifier)
     {
-        throw new NotImplementedException();
+        if (identifier.IsEmpty()) return;
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "INSERT INTO PROFILE_BADGES (TABLEBOUND_ID, BADGE_CONTAINER_BLOB, BLOBHASH) VALUES ($1, $2, $3) ON CONFLICT (TABLEBOUND_ID) DO UPDATE SET BADGE_CONTAINER_BLOB = $2, BLOBHASH = $3;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter() { Value = (long) identifier.Container },
+            new NpgsqlParameter() { Value = containerBlob.GetBytes() },
+            new NpgsqlParameter() { Value = containerBlob.GetHash() },
+        });
+
+        await command.ExecuteNonQueryAsync();
+        await connection.DisposeAsync();
     }
     
     public async Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier meeplIdentifier)
     {
-        throw new NotImplementedException();
+        if (meeplIdentifier.IsEmpty()) return new BadgeContainerBlob();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "SELECT BADGE_CONTAINER_BLOB FROM PROFILE_BADGES WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long)meeplIdentifier.Container });
+
+        var reader = await command.ExecuteReaderAsync();
+
+        BadgeContainerBlob blob = new BadgeContainerBlob();
+        if (reader.HasRows)
+        {
+            await reader.ReadAsync();
+            byte[] buffer = new byte[8192];
+            var numberRead = reader.GetBytes(0, 0, buffer, 0, 8192);
+            blob.FromBytes(buffer);
+        }
+
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return blob;
+
     }
 
     public async Task<EventContainerBlob> GetEventContainer(MeeplIdentifier meeplIdentifier)
     {
-        throw new NotImplementedException();
+        if (meeplIdentifier.IsEmpty()) return new EventContainerBlob();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
     }
 
     public async Task<OrganizationContainerBlob> GetOrganizationContainer(MeeplIdentifier meeplIdentifier)
     {
-        throw new NotImplementedException();
+        if (meeplIdentifier.IsEmpty()) return new OrganizationContainerBlob();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
     }
 
     #endregion
