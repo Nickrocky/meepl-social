@@ -3,42 +3,35 @@ using Mercurial.Util;
 
 namespace Meepl.API.MercurialBlobs;
 
-/// <summary>
-/// This is the blob we are storing in the database for clan and club relationships
-/// </summary>
-public class OrganizationContainerBlob : IMercurial
+public class OrganizationListBlob : IMercurial
 {
-    public OrganizationListBlob Clubs;
-    public OrganizationListBlob Clans;
+    public List<long> Organizations = new List<long>();
+
     public byte[] GetBytes()
     {
         Pack pack = new Pack();
         return pack
-            .Append(Clubs)
-            .Append(Clans)
+            .Append(Organizations)
             .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
         packer
-            .Append(Clubs)
-            .Append(Clans);
+            .Append(Organizations);
     }
 
     public void FromBytes(byte[] payload)
     {
         Unpack unpack = new Unpack(payload);
         unpack
-            .Read(ref Clubs)
-            .Read(ref Clans)
+            .Read(ref Organizations)
             .Finish();
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
         unpack
-            .Read(ref Clubs)
-            .Read(ref Clans);
+            .Read(ref Organizations);
     }
 }

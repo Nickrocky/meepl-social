@@ -156,6 +156,25 @@ public class SqlManager : ISQLManager
         
         var connection = CreateConnection();
         await connection.OpenAsync();
+        
+        var cmd = "SELECT EVENT_CONTAINER_BLOB FROM PROFILE_EVENTS WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        var reader = await command.ExecuteReaderAsync();
+
+        BadgeContainerBlob blob = new BadgeContainerBlob();
+        if (reader.HasRows)
+        {
+            await reader.ReadAsync();
+            byte[] buffer = new byte[8192];
+            var numberRead = reader.GetBytes(0, 0, buffer, 0, 8192);
+            blob.FromBytes(buffer);
+        }
+
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return blob;
     }
 
     public async Task<OrganizationContainerBlob> GetOrganizationContainer(MeeplIdentifier meeplIdentifier)
@@ -164,6 +183,33 @@ public class SqlManager : ISQLManager
         
         var connection = CreateConnection();
         await connection.OpenAsync();
+        
+        var cmd = "SELECT CLAN_CONTAINER_BLOB, CLUB_CONTAINER_BLOB FROM PROFILE_MEMBERSHIPS WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        var reader = await command.ExecuteReaderAsync();
+
+        OrganizationContainerBlob blob = new OrganizationContainerBlob();
+        if (reader.HasRows)
+        {
+            OrganizationListBlob clubList = new OrganizationListBlob();
+            OrganizationListBlob clanList = new OrganizationListBlob();
+            await reader.ReadAsync();
+            byte[] clans = new byte[8192];
+            byte[] clubs = new byte[8192];
+            reader.GetBytes(0, 0, clans, 0, 8192);
+            reader.GetBytes(1, 0, clubs, 0, 8192);
+            
+            clubList.FromBytes(clubs);
+            clanList.FromBytes(clans);
+            blob.Clans = clanList;
+            blob.Clubs = clubList;
+        }
+
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return blob;
     }
 
     #endregion
