@@ -126,14 +126,36 @@ public class SqlManager : ISQLManager
 
     #region Badges
 
-    public Task<BadgeBlob> GetBadge(ulong badgeIdentifier)
+    public async Task<BadgeBlob> GetBadge(ulong badgeIdentifier)
     {
-        throw new NotImplementedException();
+        if(badgeIdentifier == 0) return new BadgeBlob();
+       
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        
+        var 
+        
+        
     }
 
     public async Task InsertBadge(BadgeBlob badge)
     {
-        throw new NotImplementedException();
+        if(badge.ID == 0) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        
+        var cmd = "INSERT INTO BADGES (BADGE_ID) VALUES ($1);";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter(){ Value = badge.ID },
+        });
+
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
+        
     }
     
     /// <summary>
@@ -224,8 +246,7 @@ public class SqlManager : ISQLManager
     }
 
     #endregion
-
-
+    
     #region Block List
     
     public Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID)
