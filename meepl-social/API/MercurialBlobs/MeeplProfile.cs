@@ -110,29 +110,90 @@ public class MeeplProfile : IMercurial
     public byte[] GetBytes()
     {
         Pack pack = new Pack();
-        pack
+        return pack
             .Append(MeeplIdentifier)
             .Append(Username)
             .Append(Biography)
             .Append(Action)
             .Append(ProfileCDNLink)
-            .Append((byte) Indicator)
-            .Append()
+            .Append((byte)Indicator)
+            .Append(UniverseTitle)
+            .Append(FriendsList)
+            .Append(BlockedList)
+            .Append(FriendRequestBlobs)
+            .Append(Unlocked_Badges)
+            .Append(Visible_Badges)
+            .Append(Events)
+            .Append(Clubs)
+            .Append(Clans)
+            .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
-        throw new NotImplementedException();
+        packer
+            .Append(MeeplIdentifier)
+            .Append(Username)
+            .Append(Biography)
+            .Append(Action)
+            .Append(ProfileCDNLink)
+            .Append((byte)Indicator)
+            .Append(UniverseTitle)
+            .Append(FriendsList)
+            .Append(BlockedList)
+            .Append(FriendRequestBlobs)
+            .Append(Unlocked_Badges)
+            .Append(Visible_Badges)
+            .Append(Events)
+            .Append(Clubs)
+            .Append(Clans);
     }
 
     public void FromBytes(byte[] payload)
     {
-        throw new NotImplementedException();
+        byte indicator = 0;
+        Unpack unpack = new Unpack(payload);
+        unpack
+            .Read(ref MeeplIdentifier)
+            .Read(ref Username)
+            .Read(ref Biography)
+            .Read(ref Action)
+            .Read(ref ProfileCDNLink)
+            .Read(ref indicator)
+            .Read(ref UniverseTitle)
+            .Read(ref FriendsList)
+            .Read(ref BlockedList)
+            .Read(ref FriendRequestBlobs)
+            .Read(ref Unlocked_Badges)
+            .Read(ref Visible_Badges)
+            .Read(ref Events)
+            .Read(ref Clubs)
+            .Read(ref Clans)
+            .Finish();
+        Indicator = (StatusIndicator) indicator;
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
-        throw new NotImplementedException();
+        byte indicator = 0;
+        unpack
+            .Read(ref MeeplIdentifier)
+            .Read(ref Username)
+            .Read(ref Biography)
+            .Read(ref Action)
+            .Read(ref ProfileCDNLink)
+            .Read(ref indicator)
+            .Read(ref UniverseTitle)
+            .Read(ref FriendsList)
+            .Read(ref BlockedList)
+            .Read(ref FriendRequestBlobs)
+            .Read(ref Unlocked_Badges)
+            .Read(ref Visible_Badges)
+            .Read(ref Events)
+            .Read(ref Clubs)
+            .Read(ref Clans)
+            .Finish();
+        Indicator = (StatusIndicator) indicator;
     }
 
     #endregion
