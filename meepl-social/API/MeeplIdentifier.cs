@@ -4,7 +4,6 @@
 using Meepl.API.Enums;
 using Mercurial.Interfaces;
 using Mercurial.Util;
-using Newtonsoft.Json;
 
 namespace Meepl.API;
 
@@ -17,7 +16,7 @@ public class MeeplIdentifier : IMercurial
     /// <summary>
     /// This is the thing that is actually storing all of the weird data we are putting in
     /// </summary>
-    private ulong container;
+    public ulong Container;
     
     private static readonly ulong AREA_IDENTIFIER_MASK = 0xFC00000000000000;
     private static readonly ulong SHARD_MASK = 0x03FF000000000000;
@@ -27,34 +26,17 @@ public class MeeplIdentifier : IMercurial
     private ushort ShardIdentifier;
     private ulong UserIdentifier;
 
-    [JsonIgnore] public ulong Value
-    { 
-        get
-        {
-            return container;
-        }
-    }
-
     public bool IsEmpty()
     {
-        return container == 0;
+        return Container == 0;
     }
 
-    /// <summary>
-    /// THIS IS FOR MERCURIAL USE ONLY, IF YOU ARENT MERCURIAL DONT! -NICK
-    /// </summary>
-    public MeeplIdentifier()
-    {
-        container = 0;
-    }
-    
     /// <summary>
     /// Creates a "null" Tablebound identifier
     /// </summary>
-    /// <returns>An invalid Tablebound identifier</returns>
-    public static MeeplIdentifier CreateEmpty()
+    public MeeplIdentifier()
     {
-        return new MeeplIdentifier(0);
+        Container = 0;
     }
 
     /// <summary>
@@ -88,7 +70,7 @@ public class MeeplIdentifier : IMercurial
     //I understand that effectively it has the same functional purpose the difference is that someone has to actually think "huh maybe this isn't right" for a moment - nick
     private MeeplIdentifier(ulong container)
     {
-        this.container = container;
+        this.Container = container;
         AreaIdentifier = (AreaIdentifier) ((byte) (container >> 58));
         ShardIdentifier = (ushort) ((SHARD_MASK & container) >> 48);
         UserIdentifier = (IDENTIFIER_MASK & container);
@@ -96,34 +78,38 @@ public class MeeplIdentifier : IMercurial
 
     public override string ToString()
     {
-        return "" + container;
+        return "" + Container;
     }
+    
+    #region Mercurial Methods
 
     public byte[] GetBytes()
     {
         Pack pack = new Pack();
-        return pack.Append(container)
+        return pack.Append(Container)
             .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
         packer
-            .Append(container);
+            .Append(Container);
     }
 
     public void FromBytes(byte[] payload)
     {
         Unpack unpack = new Unpack(payload);
         unpack
-            .Read(ref container)
+            .Read(ref Container)
             .Finish();
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
         unpack
-            .Read(ref container);
+            .Read(ref Container);
     }
+
+    #endregion
 }
 
