@@ -1,3 +1,4 @@
+using Meepl.API.MercurialBlobs.Badges;
 using Mercurial.Interfaces;
 using Mercurial.Util;
 
@@ -50,8 +51,57 @@ public class MeeplProfile : IMercurial
 
     #region Meepl Social
 
+    /// <summary>
+    /// All of the friends a given player has
+    /// </summary>
     public PersonListBlob FriendsList;
+    
+    /// <summary>
+    /// All of the blocked players a given player has
+    /// </summary>
     public PersonListBlob BlockedList;
+    
+    /// <summary>
+    /// All of the friend requests a player currently has open
+    /// </summary>
+    public List<FriendRequestBlob> FriendRequestBlobs;
+
+    #endregion
+
+    #region Badges
+
+    /// <summary>
+    /// All of a user's unlocked badges
+    /// </summary>
+    public List<BadgeMetadata> Unlocked_Badges = new List<BadgeMetadata>();
+    
+    /// <summary>
+    /// All of a user's visible badges
+    /// </summary>
+    public List<BadgeMetadata> Visible_Badges = new List<BadgeMetadata>();
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// All of the Events this user has signed up to be a part of
+    /// </summary>
+    public List<long> Events = new List<long>();
+
+    #endregion
+
+    #region Organizations
+
+    /// <summary>
+    /// All of the clubs this user is a part of
+    /// </summary>
+    public List<long> Clubs = new List<long>();
+    
+    /// <summary>
+    /// All of the clans this user is a part of
+    /// </summary>
+    public List<long> Clans = new List<long>();
 
     #endregion
     
@@ -59,7 +109,15 @@ public class MeeplProfile : IMercurial
 
     public byte[] GetBytes()
     {
-        throw new NotImplementedException();
+        Pack pack = new Pack();
+        pack
+            .Append(MeeplIdentifier)
+            .Append(Username)
+            .Append(Biography)
+            .Append(Action)
+            .Append(ProfileCDNLink)
+            .Append((byte) Indicator)
+            .Append()
     }
 
     public void AppendComponentBytes(Pack packer)

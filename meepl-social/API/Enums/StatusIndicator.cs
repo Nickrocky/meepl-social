@@ -1,10 +1,11 @@
 ﻿namespace Meepl.API;
 
-public enum StatusIndicator : short 
+public enum StatusIndicator : byte 
 {
-    ONLINE = 1, 
+    OFFLINE = 0,
+    ONLINE,
     DO_NOT_DISTURB, 
     AWAY, 
     LOOKING_FOR_GROUP, 
-    OFFLINE = 0
+    
 }
