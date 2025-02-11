@@ -16,7 +16,7 @@ public interface ISQLManager
     /// </summary>
     /// <param name="tid">The tablebound id you want to query with</param>
     /// <returns>The tablebound profile associated with that id</returns>
-    Task<TableboundProfile> GetTableboundProfile(ulong tid);
+    Task<TableboundProfile> GetTableboundProfile(MeeplIdentifier tid);
     
     /// <summary>
     /// Updates the Tablebound profile of the user specified
@@ -29,9 +29,16 @@ public interface ISQLManager
     /// Grants a Badge to a Player
     /// </summary>
     /// <param name="containerBlob">The new badge container for the player</param>
-    /// <param name="profile"></param>
+    /// <param name="identifier">The identifier for that player</param>
     /// <returns></returns>
-    Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, TableboundProfile profile);
+    Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, MeeplIdentifier identifier);
+
+    /// <summary>
+    /// Gets a players badge container containing both their visible and unlocked badge lists
+    /// </summary>
+    /// <param name="identifier">The players identifier</param>
+    /// <returns>The badge container for that player</returns>
+    Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier identifier);
 
     #endregion
 
@@ -102,7 +109,7 @@ public interface ISQLManager
     /// Gets the list of friends a person has from the database
     /// </summary>
     /// <returns>The person list blob</returns>
-    public Task<PersonListBlob> GetFriendList(ulong tableboundID);
+    public Task<PersonListBlob> GetFriendList(MeeplIdentifier tableboundID);
 
     /// <summary>
     /// Updates the person list blob for a profiles friend list
@@ -125,7 +132,7 @@ public interface ISQLManager
     /// Gets the list of blocked people a person has from the database
     /// </summary>
     /// <returns>The person list blob</returns>
-    public Task<PersonListBlob> GetBlockList(ulong tableboundID);
+    public Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID);
     
     /// <summary>
     /// Updates the person list blob for a profiles blocked list

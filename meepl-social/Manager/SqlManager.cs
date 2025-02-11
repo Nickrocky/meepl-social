@@ -1,6 +1,7 @@
 using Meepl.API;
 using Meepl.API.Enums;
 using Meepl.API.MercurialBlobs;
+using Meepl.API.MercurialBlobs.Badges;
 using Meepl.Social.Interfaces;
 using Npgsql;
 
@@ -31,7 +32,8 @@ public class SqlManager : ISQLManager
 
         var friendBlob = await GetFriendList(tid);
         var blockBlob = await GetBlockList(tid);
-        var visibleBadges = await GetBadges(tid);
+        var badgeBlob = await GetBadgeContainer(tid);
+
 
     }
     
@@ -100,6 +102,16 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
+    public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, TableboundProfile profile)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task GetBadgeContainer(MeeplIdentifier meeplIdentifier)
+    {
+        
+    }
+
     #endregion
 
     #region Badges
@@ -109,11 +121,41 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
+    public async Task InsertBadge(BadgeBlob badge)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task UpdateBadge(BadgeBlob badge)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task DeleteBadge(BadgeBlob badge)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     #region Event
 
     public Task<EventBlob> GetEvent(ulong eventIdentifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task InsertEvent(EventBlob eventBlob)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task DeleteEvent(EventBlob eventBlob)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task UpdateEvent(EventBlob eventBlob)
     {
         throw new NotImplementedException();
     }
@@ -152,12 +194,22 @@ public class SqlManager : ISQLManager
         return personListBlob;
     }
 
+    public async Task UpdateFriendList(PersonListBlob personListBlob)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
 
     #region Block List
     
     public Task<PersonListBlob> GetBlockList(ulong tableboundID)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task UpdateBlockList(PersonListBlob personListBlob)
     {
         throw new NotImplementedException();
     }
