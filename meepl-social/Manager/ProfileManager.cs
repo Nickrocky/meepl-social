@@ -8,8 +8,6 @@ public class ProfileManager
 {
     private static Dictionary<ulong, MeeplProfile> Profiles = new Dictionary<ulong, MeeplProfile>();
     
-    private const ulong DEFAULT_PFP = 4294967296; //The Overrealms Icon Universe ID
-    
     private static ISQLManager SQLManagerProvider;
     private static ulong StartingNumber = 1;
     private ushort ShardIdentifier;
