@@ -136,18 +136,18 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
-    public async Task UpdateBadge(BadgeBlob badge)
+    public async Task<BadgeBlob> UpdateBadge(BadgeBlob badge)
     {
-        if (profile.BadgeBlob.IsEmpty()) return;
+        if (badge == null) return new BadgeBlob();
         
         var connection = CreateConnection();
         await connection.OpenAsync();
 
-        var cmd = "UPDATE TABLEBOUND_PROFILE SET USERNAME = $1, BIO = $2, ACTION = $3, ICONCDNLINK = $4, STATUS = $5 WHERE TABLEBOUND_ID = $6;";
+        var cmd = "UPDATE PROFILE_BADGES SET  =BADGECONTAINERBLOB = $1, BLOBHASH = $2, WHERE TABLEBOUND_ID = $6;";
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter(){ Value = profile.Username },
+            new NpgsqlParameter(){ Value = badge.BadgeContainerBlob },
             new NpgsqlParameter(){ Value = profile.Biography },
             new NpgsqlParameter(){ Value = profile.Action },
             new NpgsqlParameter(){ Value = profile.ProfileCDNLink },
