@@ -18,7 +18,7 @@ namespace Meepl.API
         /// <summary>
         /// This is the real representation of Tablebound Identifiers that is used by the server
         /// </summary>
-        [JsonIgnore] public TableboundIdentifier TableboundIdentifier { get; set; } //We dont want to send the tablebound id object
+        [JsonIgnore] public MeeplIdentifier MeeplIdentifier { get; set; } //We dont want to send the tablebound id object
 
         /// <summary>
         /// This the the 'serialized' form of the Tablebound Identifier object
@@ -28,7 +28,7 @@ namespace Meepl.API
         {
             get
             {
-                return TableboundIdentifier.Value;
+                return MeeplIdentifier.Value;
             }
         }
 
@@ -55,25 +55,26 @@ namespace Meepl.API
         /// The Meepl Identifier for the Profile Picture (This likely will need to change)
         /// </summary>
         [JsonProperty("profilepicture")] public ulong ProfilePicture { get; set;}
-        /// <summary>
-        /// This is the legacy control for the Background of a Meepl Card
-        /// </summary>
-        [JsonProperty("background")] public ulong Background { get; set;}
-        
+
         /// <summary>
         /// This is a title that is unlocked in an experience world
         /// </summary>
         [JsonProperty("title")] public ulong Title { get; set; }
-        
+
+        /// <summary>
+        /// All of the badges a player has both unlocked and visible
+        /// </summary>
+        [JsonIgnore] public BadgeContainerBlob BadgeContainerBlob;
+
         /// <summary>
         /// This is the set of badges you want to display on your profile
         /// </summary>
-        [JsonProperty("visiblebadges")] public BadgeContainerBlob VisibleBadges { get; set; }
+        [JsonProperty("visiblebadges")] public List<BadgeMetadata> VisibleBadges { get; set; }
         
         /// <summary>
         /// This is the set of all badges that are unlocked for a user.
         /// </summary>
-        [JsonProperty("unlockedbadges")] public BadgeContainerBlob UnlockedBadges { get; set;}
+        [JsonProperty("unlockedbadges")] public List<BadgeMetadata> UnlockedBadges { get; set;}
 
         #endregion
         
@@ -102,7 +103,7 @@ namespace Meepl.API
             ulong profilePicture, ulong background, ulong title, BadgeContainerBlob visibleBadges, BadgeContainerBlob unlockedBadges, List<ulong> friendIdentifiers,
             List<ulong> blockedIdentifiers, List<ulong> clubIdentifiers)
         {
-            TableboundIdentifier = TableboundIdentifier.Parse((ulong)tableboundIdentifier);
+            MeeplIdentifier = MeeplIdentifier.Parse((ulong)tableboundIdentifier);
             Username = username;
             StatusIndicator = indicator;
             Bio = bio;
@@ -118,7 +119,7 @@ namespace Meepl.API
         
         public TableboundProfile(ulong tableboundIdentifier, ulong profilePicture)
         {
-            TableboundIdentifier = TableboundIdentifier.Parse((ulong) tableboundIdentifier);
+            MeeplIdentifier = MeeplIdentifier.Parse((ulong) tableboundIdentifier);
             Username = "";
             Bio = "";
             ClubIdentifiers = new List<ulong>();
@@ -132,7 +133,7 @@ namespace Meepl.API
         
         public TableboundProfile(TableboundProfile publicProfile, List<ulong> friendIdentifiers, List<ulong> blockedIdentifiers, List<ulong> clubIdentifiers, BadgeContainerBlob unlockedBadges)
         {
-            TableboundIdentifier = publicProfile.TableboundIdentifier;
+            MeeplIdentifier = publicProfile.MeeplIdentifier;
             Username = publicProfile.Username;
             Bio = publicProfile.Bio;
             ClubIdentifiers = clubIdentifiers;
@@ -147,7 +148,7 @@ namespace Meepl.API
         
         public TableboundProfile()
         {
-            TableboundIdentifier = TableboundIdentifier.CreateEmpty();
+            MeeplIdentifier = MeeplIdentifier.CreateEmpty();
             Username = "";
             Bio = "";
             ClubIdentifiers = new List<ulong>();
@@ -169,13 +170,13 @@ namespace Meepl.API
         /// <returns>The non-personal profile of that person</returns>
         public TableboundProfile GetNonPersonalProfileClone()
         {
-            return new TableboundProfile(TableboundIdentifier.Value, StatusIndicator, Username, Bio, ProfilePicture, Background, Title, VisibleBadges,new BadgeContainerBlob(), new List<ulong>(), new List<ulong>(), new List<ulong>());
+            return new TableboundProfile(MeeplIdentifier.Value, StatusIndicator, Username, Bio, ProfilePicture, Background, Title, VisibleBadges,new BadgeContainerBlob(), new List<ulong>(), new List<ulong>(), new List<ulong>());
         }
 
         public override string ToString()
         {
             return "Tablebound Profile\n" +
-                   "TableboundIdentifier: " + TableboundIdentifier + "\n" +
+                   "TableboundIdentifier: " + MeeplIdentifier + "\n" +
                    "Username: " + Username + "\n" +
                    "Bio: " + Bio + "\n" +
                    "ProfilePicture: " + ProfilePicture + "\n" +

@@ -6,7 +6,7 @@ namespace Meepl.Util;
 public class SQLCommands
 {
     //Globally needed by all
-    public static readonly string CREATE_TABLEBOUND_PROFILE_TABLE = "CREATE TABLE IF NOT EXISTS TABLEBOUND_PROFILE(TABLEBOUND_ID BIGINT PRIMARY KEY, USERNAME VARCHAR(16), BIO VARCHAR(200), ACTION VARCHAR(32), ICONCDNLINK VARCHAR(128), TITLE BIGINT, STATUS SMALLINT);";
+    public static readonly string CREATE_TABLEBOUND_PROFILE_TABLE = "CREATE TABLE IF NOT EXISTS TABLEBOUND_PROFILE(TABLEBOUND_ID BIGINT PRIMARY KEY, USERNAME VARCHAR(16), BIO VARCHAR(200), ACTION VARCHAR(32), ICONCDNLINK VARCHAR(128), STATUS SMALLINT);";
 
     //From this point down the tables are split by service, the only exception being Meepl Statistics which has some of
     //its own tables and calls upon ALL of the other tables in the database
@@ -72,8 +72,11 @@ public class SQLCommands
 
     #region Meepl Universe
 
-
-
+    public static readonly string CREATE_PROFILE_UNIVERSE_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS PROFILE_UNIVERSE_ITEMS (TABLEBOUND_ID BIGINT, TITLE BIGINT, CONSTRAINT FK_TID FOREIGN KEY (TABLEBOUND_ID) REFERENCES TABLEBOUND_PROFILE(TABLEBOUND_ID));";
+    
+    //All tables below this point in this region refer to the Meepl Universe DB which is NOT Meepl Prod
+    public static readonly string CREATE_UNIVERSE_TABLE_TITLES = "CREATE TABLE IF NOT EXISTS UNIVERSE_TITLES (TABLEBOUND_ID BIGINT, TITLE_BLOB BYTEA, BLOBHASH VARCHAR(128));";
+ 
     #endregion
 
     #region Meepl Message

@@ -13,61 +13,32 @@ public class PersonListBlob : IMercurial
     /// <summary>
     /// List of all of the people in that person list
     /// </summary>
-    public List<TableboundIdentifier> PersonList = new List<TableboundIdentifier>();
+    public List<MeeplIdentifier> PersonList = new List<MeeplIdentifier>();
 
     public byte[] GetBytes()
     {
-        List<long> identifiers = new List<long>();
-        foreach (TableboundIdentifier identifier in PersonList)
-        {
-            identifiers.Add((long) identifier.Value);
-        }
         Pack pack = new Pack();
         return pack
-            .Append(identifiers)
+            .Append(PersonList)
             .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
-        List<long> identifiers = new List<long>();
-        foreach (TableboundIdentifier identifier in PersonList)
-        {
-            identifiers.Add((long) identifier.Value);
-        }
-
         packer
-            .Append(identifiers);
+            .Append(PersonList);
     }
 
     public void FromBytes(byte[] payload)
     {
-        List<TableboundIdentifier> tableboundIdentifiers = new List<TableboundIdentifier>();
-        List<long> longs = new List<long>();
         Unpack unpack = new Unpack(payload);
         unpack
-            .Read(ref longs);
-        
-        foreach (long val in longs)
-        {
-            tableboundIdentifiers.Add(TableboundIdentifier.Parse((ulong)val));
-        }
-
-        PersonList = tableboundIdentifiers;
+            .Read(ref PersonList);
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
-        List<TableboundIdentifier> tableboundIdentifiers = new List<TableboundIdentifier>();
-        List<long> longs = new List<long>();
         unpack
-            .Read(ref longs);
-        
-        foreach (long val in longs)
-        {
-            tableboundIdentifiers.Add(TableboundIdentifier.Parse((ulong)val));
-        }
-
-        PersonList = tableboundIdentifiers;
+            .Read(ref PersonList);
     }
 }

@@ -53,7 +53,7 @@ public class ProfileManager
     public static async Task<bool> Exists(ulong tid)
     {
         var profile = await GetProfile(tid);
-        return profile.TableboundIdentifier.IsEmpty();
+        return profile.MeeplIdentifier.IsEmpty();
     }
     
     // ============================
@@ -65,7 +65,7 @@ public class ProfileManager
     /// </summary>
     public static void AddDebugProfile(TableboundProfile profile)
     {
-        Profiles.Add(profile.TableboundIdentifier.Value, profile);
+        Profiles.Add(profile.MeeplIdentifier.Value, profile);
     }
 
     /// <summary>

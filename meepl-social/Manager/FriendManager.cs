@@ -25,7 +25,7 @@ public class FriendManager : IFriendManager
     }
     public bool IsValidUserID(ulong userID)
     {
-        return (!TableboundIdentifier.Parse(userID).IsEmpty());
+        return (!MeeplIdentifier.Parse(userID).IsEmpty());
     }
 
     public async Task<PersonListBlob> GetFriendsAsync(ulong userId)
@@ -51,7 +51,7 @@ public class FriendManager : IFriendManager
 
     public async Task<bool> AddFriendAsync(ulong requesterId, ulong friendId)
     {
-        return await Task.FromResult(!TableboundIdentifier.Parse(friendId).IsEmpty());
+        return await Task.FromResult(!MeeplIdentifier.Parse(friendId).IsEmpty());
     }
 
     public async Task<bool> RemoveFriendAsync(ulong requesterId, ulong friendId)

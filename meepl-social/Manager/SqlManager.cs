@@ -23,8 +23,19 @@ public class SqlManager : ISQLManager
     }
 
     #region Tablebound Profile
-    
+
     public async Task<TableboundProfile> GetTableboundProfile(ulong tid)
+    {
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var friendBlob = await GetFriendList(tid);
+        var blockBlob = await GetBlockList(tid);
+        var visibleBadges = await GetBadges(tid)
+
+    }
+    
+    /*public async Task<TableboundProfile> GetTableboundProfile(ulong tid)
     {
         var connection = CreateConnection();
         await connection.OpenAsync();
@@ -82,7 +93,7 @@ public class SqlManager : ISQLManager
         await reader.DisposeAsync();
         await connection.CloseAsync();
         return new TableboundProfile(publicProfile, friends, blockedUsers, clubs, unlockedBadgeList);
-    }
+    }*/
 
     public Task UpdateTableboundProfile(TableboundProfile profile)
     {

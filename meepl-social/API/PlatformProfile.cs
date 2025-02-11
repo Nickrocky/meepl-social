@@ -18,7 +18,7 @@ public class PlatformProfile
     /// <summary>
     /// The Tablebound identifier
     /// </summary>
-    [JsonProperty("tableboundid")] public TableboundIdentifier TableboundIdentifier { get; }
+    [JsonProperty("tableboundid")] public MeeplIdentifier MeeplIdentifier { get; }
     /// <summary>
     /// The account type of the platform profile
     /// </summary>
@@ -27,14 +27,14 @@ public class PlatformProfile
     public PlatformProfile(ulong platformIdentifier, ulong tableboundIdentifier, AccountType type)
     {
         PlatformIdentifier = platformIdentifier;
-        TableboundIdentifier = TableboundIdentifier.Parse((ulong) tableboundIdentifier);
+        MeeplIdentifier = MeeplIdentifier.Parse((ulong) tableboundIdentifier);
         Type = type;
     }
         
     public PlatformProfile()
     {
         PlatformIdentifier = 0;
-        TableboundIdentifier = TableboundIdentifier.CreateEmpty();
+        MeeplIdentifier = MeeplIdentifier.CreateEmpty();
         Type = AccountType.UNKNOWN;
     }
 
@@ -45,7 +45,7 @@ public class PlatformProfile
     public bool IsValid()
     {
         if (PlatformIdentifier == 0) return false;
-        if (TableboundIdentifier.IsEmpty()) return false;
+        if (MeeplIdentifier.IsEmpty()) return false;
         if (Type == AccountType.UNKNOWN) return false;
         return true;
     }
@@ -54,7 +54,7 @@ public class PlatformProfile
     {
         return "Platform Profile\n" +
                "PlatformIdentifier: " + PlatformIdentifier + "\n" +
-               "TableboundIdentifier: " + TableboundIdentifier + "\n" +
+               "TableboundIdentifier: " + MeeplIdentifier + "\n" +
                "AccountType: " + Type + "\n";
     }
 }

@@ -2,6 +2,8 @@
 // All rights reserved.
 
 using Meepl.API.Enums;
+using Mercurial.Interfaces;
+using Mercurial.Util;
 using Newtonsoft.Json;
 
 namespace Meepl.API;
@@ -10,7 +12,7 @@ namespace Meepl.API;
 /// These are the Tablebound specific identifiers, if you want to understand how they work read up on it in the link provided
 /// </summary>
 /// <see href="https://docs.tablebound.com/books/technical-tools/page/crystal-specification"/>
-public class TableboundIdentifier
+public class MeeplIdentifier : IMercurial
 {
     /// <summary>
     /// This is the thing that is actually storing all of the weird data we are putting in
@@ -37,14 +39,22 @@ public class TableboundIdentifier
     {
         return container == 0;
     }
+
+    /// <summary>
+    /// THIS IS FOR MERCURIAL USE ONLY, IF YOU ARENT MERCURIAL DONT! -NICK
+    /// </summary>
+    public MeeplIdentifier()
+    {
+        container = 0;
+    }
     
     /// <summary>
     /// Creates a "null" Tablebound identifier
     /// </summary>
     /// <returns>An invalid Tablebound identifier</returns>
-    public static TableboundIdentifier CreateEmpty()
+    public static MeeplIdentifier CreateEmpty()
     {
-        return new TableboundIdentifier(0);
+        return new MeeplIdentifier(0);
     }
 
     /// <summary>
@@ -54,14 +64,14 @@ public class TableboundIdentifier
     /// <param name="shardIdentifier">The shard number of that server</param>
     /// <param name="userIncrement">That shard's user increment</param>
     /// <returns>A properly packed Tablebound Identifier</returns>
-    public static TableboundIdentifier Create(AreaIdentifier areaIdentifier, ushort shardIdentifier, ulong userIncrement)
+    public static MeeplIdentifier Create(AreaIdentifier areaIdentifier, ushort shardIdentifier, ulong userIncrement)
     {
         byte areaIdentifierVal = (byte) areaIdentifier;
         ulong container = 0;
         container += ((ulong) areaIdentifierVal << 58);
         container += ((ulong)shardIdentifier << 48);
         container += userIncrement;
-        return new TableboundIdentifier(container);
+        return new MeeplIdentifier(container);
     }
 
     /// <summary>
@@ -69,14 +79,14 @@ public class TableboundIdentifier
     /// </summary>
     /// <param name="container">The container you want to parse</param>
     /// <returns>That crystal identifier value</returns>
-    public static TableboundIdentifier Parse(ulong container)
+    public static MeeplIdentifier Parse(ulong container)
     {
-        return new TableboundIdentifier(container);
+        return new MeeplIdentifier(container);
     }
 
     //I did this so people dont try and just new CrystalIdentifier(some number) this bc this is the container and not just a number use parse if you want to parse a container into a crystal identifier
     //I understand that effectively it has the same functional purpose the difference is that someone has to actually think "huh maybe this isn't right" for a moment - nick
-    private TableboundIdentifier(ulong container)
+    private MeeplIdentifier(ulong container)
     {
         this.container = container;
         AreaIdentifier = (AreaIdentifier) ((byte) (container >> 58));
@@ -87,6 +97,33 @@ public class TableboundIdentifier
     public override string ToString()
     {
         return "" + container;
+    }
+
+    public byte[] GetBytes()
+    {
+        Pack pack = new Pack();
+        return pack.Append(container)
+            .Build();
+    }
+
+    public void AppendComponentBytes(Pack packer)
+    {
+        packer
+            .Append(container);
+    }
+
+    public void FromBytes(byte[] payload)
+    {
+        Unpack unpack = new Unpack(payload);
+        unpack
+            .Read(ref container)
+            .Finish();
+    }
+
+    public void ComponentFromBytes(Unpack unpack)
+    {
+        unpack
+            .Read(ref container);
     }
 }
 
