@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Mercurial.Interfaces;
 using Mercurial.Util;
 
@@ -38,5 +40,11 @@ public class BadgeContainerBlob : IMercurial
         unpack
             .Read(ref Unlocked_Badges)
             .Read(ref Visible_Badges);
+    }
+
+    public string GetHash()
+    {
+        var sha = SHA512.Create();
+        return Encoding.ASCII.GetString(sha.ComputeHash(GetBytes()));
     }
 }
