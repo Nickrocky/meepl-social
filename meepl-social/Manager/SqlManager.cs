@@ -107,11 +107,6 @@ public class SqlManager : ISQLManager
         throw new NotImplementedException();
     }
 
-    public async Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, TableboundProfile profile)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<BadgeContainerBlob> GetBadgeContainer(MeeplIdentifier meeplIdentifier)
     {
         throw new NotImplementedException();
