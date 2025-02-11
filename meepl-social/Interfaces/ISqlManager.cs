@@ -111,6 +111,12 @@ public interface ISQLManager
     /// <note> This function has an upsert behavior </note>
     public Task UpdateFriendList(PersonListBlob personListBlob);
     
+    /// <summary>
+    /// Gets the list of friend requests for a user from database
+    /// </summary>
+    /// <returns>The person list blob</returns>
+    public Task<PersonListBlob> GetFriendRequestList(ulong tableboundID);
+    
     #endregion
 
     #region Blocked

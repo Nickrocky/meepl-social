@@ -31,7 +31,7 @@ public class SqlManager : ISQLManager
 
         var friendBlob = await GetFriendList(tid);
         var blockBlob = await GetBlockList(tid);
-        var visibleBadges = await GetBadges(tid)
+        var visibleBadges = await GetBadges(tid);
 
     }
     
