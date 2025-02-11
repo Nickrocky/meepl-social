@@ -1,4 +1,6 @@
 ﻿using Meepl.API;
+using Meepl.API.MercurialBlobs;
+using Meepl.API.MercurialBlobs.Responses;
 using Meepl.Managers;
 using Meepl.Models;
 using Meepl.Util;
@@ -28,14 +30,22 @@ public class ProfileController : ControllerBase
     /// <returns>If the name is taken or not</returns>
     [HttpGet]
     [Route("personal")]
-    public async Task<ActionResult<TableboundProfile>> GetPersonalProfile()
+    public async Task<ActionResult<byte[]>> GetPersonalProfile()
     {
         var identity = HttpUtils.ParseIdentityClaim(HttpContext);
+        if(identity == 0) return File(new PersonalProfileResponse()
+        {
+            Profile = new MeeplProfile(),
+            Message = ErrorCodes.PROFILE_INVALID_PROFILE
+        }.GetBytes(), "application/octet-stream");
         Console.WriteLine("Attempting to check the following tablebound account: " + identity);
-       // var profile = await ProfileManager.GetPersonalProfile(identity);
-        //Console.WriteLine("Found account: " + profile.Username + " with the identifier: " + profile.TableboundIdentifier.Value);
-        //return Ok (profile);
-        return Ok("Test message");
+        var profile = await ProfileManager.GetProfile(identity);
+        Console.WriteLine("Found account: " + profile.Username + " with the identifier: " + profile.MeeplIdentifier.Container);
+        return File(new PersonalProfileResponse()
+        {
+            Profile = profile,
+            Message = ErrorCodes.PROFILE_PERSONAL_RETRIEVAL_SUCCESS
+        }.GetBytes(), "application/octet-stream");
     }
     
 

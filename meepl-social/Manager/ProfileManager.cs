@@ -1,11 +1,12 @@
 using Meepl.API;
 using Meepl.API.Enums;
+using Meepl.API.MercurialBlobs;
 
 namespace Meepl.Managers;
 
 public class ProfileManager
 {
-    private static Dictionary<ulong, TableboundProfile> Profiles = new Dictionary<ulong, TableboundProfile>();
+    private static Dictionary<ulong, MeeplProfile> Profiles = new Dictionary<ulong, MeeplProfile>();
     
     private const ulong DEFAULT_PFP = 4294967296; //The Overrealms Icon Universe ID
     
@@ -37,12 +38,12 @@ public class ProfileManager
     /// </summary>
     /// <param name="playerIdentifier">the players identifier</param>
     /// <returns>the player profile that represents that player</returns>
-    public static async Task<TableboundProfile> GetProfile(ulong playerIdentifier)
+    public static async Task<MeeplProfile> GetProfile(ulong playerIdentifier)
     {
         if (Profiles.ContainsKey(playerIdentifier)) return Profiles[playerIdentifier];
-        TableboundProfile profile = await SQLManagerProvider.GetTableboundProfile(playerIdentifier);
+        MeeplProfile profile = await SQLManagerProvider.GetTableboundProfile(MeeplIdentifier.Parse(playerIdentifier));
         Profiles.Add(playerIdentifier, profile);
-        return profile.GetNonPersonalProfileClone();
+        return profile;
     }
 
     /// <summary>
@@ -55,25 +56,5 @@ public class ProfileManager
         var profile = await GetProfile(tid);
         return profile.MeeplIdentifier.IsEmpty();
     }
-    
-    // ============================
-    //         TESTING HOOKS 
-    // ============================
-    
-    /// <summary>
-    /// DO NOT USE THIS FUNCTION FOR ANYTHING BUT UNIT TESTING
-    /// </summary>
-    public static void AddDebugProfile(TableboundProfile profile)
-    {
-        Profiles.Add(profile.MeeplIdentifier.Container, profile);
-    }
 
-    /// <summary>
-    /// DO NOT USE THIS FUNCTION FOR ANYTHING BUT UNIT TESTING
-    /// </summary>
-    public static void ClearAllProfiles()
-    {
-        Profiles.Clear();
-    }
-    
 }
