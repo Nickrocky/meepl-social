@@ -13,7 +13,7 @@ public class FriendManager : IFriendManager
     private static ISQLManager SQLManagerProvider;
     private static Dictionary<ulong, PersonListBlob> FriendsListCache = new Dictionary<ulong, PersonListBlob>();
     private static Dictionary<ulong, PersonListBlob> BlockedListCache = new Dictionary<ulong, PersonListBlob>();
-    private static Dictionary<ulong, PersonListBlob> FriendRequestCache = new Dictionary<ulong, PersonListBlob>();
+    private static Dictionary<ulong, List<FriendRequestBlob>> FriendRequestCache = new Dictionary<ulong, List<FriendRequestBlob>>();
 
     public static FriendManager Get()
     {
@@ -58,20 +58,20 @@ public class FriendManager : IFriendManager
         return blockList;
     }
 
-    public async Task<PersonListBlob> GetFriendRequestsAsync(ulong tableboundID)
+    public async Task<List<FriendRequestBlob>> GetFriendRequestsAsync(ulong tableboundID)
     {
         if (FriendRequestCache.ContainsKey(tableboundID)) return FriendRequestCache[tableboundID];
-        var friendRequestList = await SQLManagerProvider.GetFriendRequestList(tableboundID);
+        var friendRequestList = await SQLManagerProvider.GetFriendRequestList(MeeplIdentifier.Parse(tableboundID));
         FriendRequestCache.Add(tableboundID, friendRequestList);
         return friendRequestList;
     }
 
-        public async Task<PersonListBlob> AddFriendAsync(ulong requesterId, ulong friendId)
+        public async Task AddFriendAsync(ulong requesterId, ulong friendId)
         { 
             throw new NotImplementedException();
          }
         
-        public async Task<PersonListBlob> RemoveFriendAsync(ulong requesterId, ulong friendId)
+        public async Task RemoveFriendAsync(ulong requesterId, ulong friendId)
         {
             throw new NotImplementedException();
         }
@@ -83,7 +83,7 @@ public class FriendManager : IFriendManager
         /// <param name="blockedUserId"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<PersonListBlob> BlockUserAsync(ulong requesterId, ulong blockedUserId)
+        public async Task BlockUserAsync(ulong requesterId, ulong blockedUserId)
         {
             throw new NotImplementedException();
         }
@@ -94,7 +94,7 @@ public class FriendManager : IFriendManager
         /// <param name="requesterId"></param>
         /// <param name="blockedUserId"></param>
         /// <returns></returns>
-        public async Task<PersonListBlob> UnblockUserAsync(ulong requesterId, ulong blockedUserId)
+        public async Task UnblockUserAsync(ulong requesterId, ulong blockedUserId)
         {
            throw new NotImplementedException();
         }
