@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Meepl.API.MercurialBlobs.Badges;
+using Newtonsoft.Json;
 
 namespace Meepl.API
 {
@@ -67,12 +68,12 @@ namespace Meepl.API
         /// <summary>
         /// This is the set of badges you want to display on your profile
         /// </summary>
-        [JsonProperty("visiblebadges")] public List<ulong> VisibleBadges { get; set; }
+        [JsonProperty("visiblebadges")] public BadgeContainerBlob VisibleBadges { get; set; }
         
         /// <summary>
         /// This is the set of all badges that are unlocked for a user.
         /// </summary>
-        [JsonProperty("unlockedbadges")] public List<ulong> UnlockedBadges { get; set;}
+        [JsonProperty("unlockedbadges")] public BadgeContainerBlob UnlockedBadges { get; set;}
 
         #endregion
         
@@ -98,7 +99,7 @@ namespace Meepl.API
         #region Constructors
 
         public TableboundProfile(ulong tableboundIdentifier, StatusIndicator indicator, string username, string bio,
-            ulong profilePicture, ulong background, ulong title, List<ulong> visibleBadges, List<ulong> unlockedBadges, List<ulong> friendIdentifiers,
+            ulong profilePicture, ulong background, ulong title, BadgeContainerBlob visibleBadges, BadgeContainerBlob unlockedBadges, List<ulong> friendIdentifiers,
             List<ulong> blockedIdentifiers, List<ulong> clubIdentifiers)
         {
             TableboundIdentifier = TableboundIdentifier.Parse((ulong)tableboundIdentifier);
@@ -124,12 +125,12 @@ namespace Meepl.API
             FriendIdentifiers = new List<ulong>();
             BlockedIdentifiers = new List<ulong>();
             ProfilePicture = profilePicture;
-            UnlockedBadges = new List<ulong>();
+            UnlockedBadges = new BadgeContainerBlob();
             Background = 0;
             Title = 0;
         }
         
-        public TableboundProfile(TableboundProfile publicProfile, List<ulong> friendIdentifiers, List<ulong> blockedIdentifiers, List<ulong> clubIdentifiers, List<ulong> unlockedBadges)
+        public TableboundProfile(TableboundProfile publicProfile, List<ulong> friendIdentifiers, List<ulong> blockedIdentifiers, List<ulong> clubIdentifiers, BadgeContainerBlob unlockedBadges)
         {
             TableboundIdentifier = publicProfile.TableboundIdentifier;
             Username = publicProfile.Username;
@@ -153,8 +154,8 @@ namespace Meepl.API
             FriendIdentifiers = new List<ulong>();
             BlockedIdentifiers = new List<ulong>();
             ProfilePicture = 0;
-            UnlockedBadges = new List<ulong>();
-            VisibleBadges = new List<ulong>();
+            UnlockedBadges = new BadgeContainerBlob();
+            VisibleBadges = new BadgeContainerBlob();
             Background = 0;
             Title = 0;
         }
@@ -168,7 +169,7 @@ namespace Meepl.API
         /// <returns>The non-personal profile of that person</returns>
         public TableboundProfile GetNonPersonalProfileClone()
         {
-            return new TableboundProfile(TableboundIdentifier.Value, StatusIndicator, Username, Bio, ProfilePicture, Background, Title, VisibleBadges,new List<ulong>(), new List<ulong>(), new List<ulong>(), new List<ulong>());
+            return new TableboundProfile(TableboundIdentifier.Value, StatusIndicator, Username, Bio, ProfilePicture, Background, Title, VisibleBadges,new BadgeContainerBlob(), new List<ulong>(), new List<ulong>(), new List<ulong>());
         }
 
         public override string ToString()

@@ -1,4 +1,5 @@
 using Meepl.API.MercurialBlobs;
+using Meepl.API.MercurialBlobs.Badges;
 
 namespace Meepl.API;
 
@@ -17,13 +18,20 @@ public interface ISQLManager
     /// <returns>The tablebound profile associated with that id</returns>
     Task<TableboundProfile> GetTableboundProfile(ulong tid);
     
-    
     /// <summary>
     /// Updates the Tablebound profile of the user specified
     /// </summary>
     /// <param name="profile">The profile of the person you want to update</param>
     /// <returns></returns>
     Task UpdateTableboundProfile(TableboundProfile profile);
+
+    /// <summary>
+    /// Grants a Badge to a Player
+    /// </summary>
+    /// <param name="containerBlob">The new badge container for the player</param>
+    /// <param name="profile"></param>
+    /// <returns></returns>
+    Task GrantBadgeToPlayer(BadgeContainerBlob containerBlob, TableboundProfile profile);
 
     #endregion
 
@@ -56,7 +64,6 @@ public interface ISQLManager
     /// </note>
     /// <param name="badge">The badge you want to find and delete from the database/param>
     public Task DeleteBadge(BadgeBlob badge);
-    
 
     #endregion
 
