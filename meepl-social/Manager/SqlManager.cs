@@ -128,31 +128,84 @@ public class SqlManager : ISQLManager
 
     public Task<BadgeBlob> GetBadge(ulong badgeIdentifier)
     {
-        throw new NotImplementedException();
+        {
+            if (badgeIdentifier == 0);
+        
+            var connection = CreateConnection();
+            await connection.OpenAsync();
+
+            var friendBlob = await GetFriendList(tid);
+            var blockBlob = await GetBlockList(tid);
+            var badgeBlob = await GetBadgeContainer(tid);
+            var eventBlob = await GetEventContainer(tid);
+            var clubBlob = await GetOrganizationContainer(tid);
+            var friendRequestBlob = await GetFriendRequestList(tid);
+
+            var cmd = "SELECT * FROM TABLEBOUND_PROFILE WHERE TABLEBOUND_ID = $1;";
+            var command = new NpgsqlCommand(cmd, connection);
+            command.Parameters.Add(new NpgsqlParameter() {Value = (long) tid.Container});
+
+            var reader = await command.ExecuteReaderAsync();
+
+            if (!reader.HasRows) return new MeeplProfile();
+
+            await reader.ReadAsync();
+
+            var username = reader.GetString(1);
+            var bio = reader.GetString(2);
+            var action = reader.GetString(3);
+            var cdnlink = reader.GetString(4);
+            var status = (StatusIndicator)reader.GetInt16(5);
+
+            await reader.DisposeAsync();
+            await connection.CloseAsync();
+        
+            return new MeeplProfile()
+            {
+                Username = username,
+                Action = action,
+                Biography = bio,
+                ProfileCDNLink = cdnlink,
+                Indicator = status,
+                Clans = clubBlob.Clans,
+                Clubs = clubBlob.Clubs,
+                Events = eventBlob.Events,
+                BlockedList = blockBlob,
+                FriendsList = friendBlob,
+                MeeplIdentifier = tid,
+                UniverseTitle = 0,
+                Unlocked_Badges = badgeBlob.Unlocked_Badges,
+                Visible_Badges = badgeBlob.Visible_Badges,
+                FriendRequestBlobs = friendRequestBlob
+            };
     }
 
     public async Task InsertBadge(BadgeBlob badge)
     {
         throw new NotImplementedException();
     }
-
-    public async Task<BadgeBlob> UpdateBadge(BadgeBlob badge)
+    
+    
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <notes> Badge ID 0 is set to NULL always</notes>
+    /// <param name="badge"></param>
+    public async Task UpdateBadge(BadgeBlob badge)
     {
-        if (badge == null) return new BadgeBlob();
+        if (badge.ID == 0) return;
         
         var connection = CreateConnection();
         await connection.OpenAsync();
 
-        var cmd = "UPDATE PROFILE_BADGES SET  =BADGECONTAINERBLOB = $1, BLOBHASH = $2, WHERE TABLEBOUND_ID = $6;";
+        var cmd = "UPDATE BADGES SET  = BADGE_ID = $1, BADGE_BLOB = $2, BLOBHASH = $3 WHERE BADGE_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter(){ Value = badge.BadgeContainerBlob },
-            new NpgsqlParameter(){ Value = profile.Biography },
-            new NpgsqlParameter(){ Value = profile.Action },
-            new NpgsqlParameter(){ Value = profile.ProfileCDNLink },
-            new NpgsqlParameter(){ Value = (short) profile.Indicator },
-            new NpgsqlParameter(){ Value = (long) profile.MeeplIdentifier.Container }
+            new NpgsqlParameter(){ Value = badge.ID },
+            new NpgsqlParameter(){ Value = badge.GetBytes() },
+            new NpgsqlParameter(){ Value = "todo" },
         });
 
         await command.ExecuteNonQueryAsync();
