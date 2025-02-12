@@ -1,5 +1,8 @@
 // Copyright (c) Tablebound LLC. 2025 and affiliates.
 // All rights reserved.
+
+using System.Security.Cryptography;
+using System.Text;
 using Mercurial.Interfaces;
 using Mercurial.Util;
 using Newtonsoft.Json;
@@ -84,5 +87,11 @@ public class BadgeBlob : IMercurial
         CDNRoute = cdnroute;
         ID = id;
 
+    }
+    
+    public string GetHash()
+    {
+        var sha = SHA512.Create();
+        return Encoding.ASCII.GetString(sha.ComputeHash(GetBytes()));
     }
 }

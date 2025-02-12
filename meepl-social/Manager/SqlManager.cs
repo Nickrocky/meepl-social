@@ -223,21 +223,23 @@ public class SqlManager : ISQLManager
         var connection = CreateConnection();
         await connection.OpenAsync();
         
-        var cmd = "SELECT * FROM BADGE_BLOB WHERE BADGE_ID = $1;";
+        var cmd = "SELECT BADGE_BLOB FROM BADGES WHERE BADGE_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
         
-        command.Parameters.Add(new NpgsqlParameter() { Value = (long)badgeIdentifier });
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) badgeIdentifier });
         
         var reader = await command.ExecuteReaderAsync();
         
         if (!reader.HasRows) return new BadgeBlob();
         await reader.ReadAsync();
+
+        BadgeBlob blob = new BadgeBlob();
+        byte[] buffer = new byte[512];
+        reader.GetBytes(0, 0, buffer, 0, 512);
         
-        var badgeID = reader.GetInt64(0);
-        var badgeBlob = reader.GetBytes();
+        blob.FromBytes(buffer);
 
-
-
+        return blob;
     }
 
     public async Task InsertBadge(BadgeBlob badge)
@@ -247,12 +249,14 @@ public class SqlManager : ISQLManager
         var connection = CreateConnection();
         await connection.OpenAsync();
         
-        var cmd = "INSERT INTO BADGES (BADGE_ID) VALUES ($1);";
+        var cmd = "INSERT INTO BADGES (BADGE_ID, BADGE_BLOB, BLOBHASH) VALUES ($1, $2, $3);";
         var command = new NpgsqlCommand(cmd, connection);
         
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
             new NpgsqlParameter(){ Value = badge.ID },
+            new NpgsqlParameter(){ Value = badge.GetBytes() },
+            new NpgsqlParameter(){ Value = badge.GetHash() },
         });
 
         await command.ExecuteNonQueryAsync();
@@ -261,7 +265,7 @@ public class SqlManager : ISQLManager
     }
     
     /// <summary>
-    /// 
+    /// Updates information in the badge's blob
     /// </summary>
     /// <notes> Badge ID 0 is set to NULL always</notes>
     /// <param name="badge"></param>
@@ -272,13 +276,13 @@ public class SqlManager : ISQLManager
         var connection = CreateConnection();
         await connection.OpenAsync();
 
-        var cmd = "UPDATE BADGES SET  BADGE_ID = $1, BADGE_BLOB = $2, BLOBHASH = $3 WHERE BADGE_ID = $1;";
+        var cmd = "UPDATE BADGES SET BADGE_BLOB = $2, BLOBHASH = $3 WHERE BADGE_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
             new NpgsqlParameter(){ Value = badge.ID },
             new NpgsqlParameter(){ Value = badge.GetBytes() },
-            new NpgsqlParameter(){ Value = "todo" },
+            new NpgsqlParameter(){ Value = badge.GetHash() },
         });
 
         await command.ExecuteNonQueryAsync();
