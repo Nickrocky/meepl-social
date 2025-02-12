@@ -1,3 +1,4 @@
+using System.Data;
 using Meepl.API;
 using Meepl.API.Enums;
 using Meepl.API.MercurialBlobs;
@@ -348,7 +349,36 @@ public class SqlManager : ISQLManager
 
     public async Task<List<FriendRequestBlob>> GetFriendRequestList(MeeplIdentifier tableboundID)
     {
-        throw new NotImplementedException();
+        if (tableboundID.Container == 0) return new List<FriendRequestBlob>();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "SELECT * FROM FRIEND_REQUESTS WHERE RECIPIENT = $1";
+        var command = new NpgsqlCommand(cmd, connection);
+
+        var reader = await command.ExecuteReaderAsync();
+
+        List<FriendRequestBlob> friendRequestBlobs = new List<FriendRequestBlob>();
+        string msg = "";
+        MeeplIdentifier issuer, recipient;
+        FriendRequestBlob requestBlob;
+        while (await reader.ReadAsync())
+        {
+            requestBlob = new FriendRequestBlob();
+            issuer = MeeplIdentifier.Parse((ulong) reader.GetInt64(0));
+            recipient = MeeplIdentifier.Parse((ulong) reader.GetInt64(1));
+            msg = reader.GetString(2);
+            requestBlob.Issuer = issuer;
+            requestBlob.Recipient = recipient;
+            requestBlob.Message = msg;
+            friendRequestBlobs.Add(requestBlob);
+        }
+
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return friendRequestBlobs;
     }
 
     #endregion
