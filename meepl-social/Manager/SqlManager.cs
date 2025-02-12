@@ -144,6 +144,7 @@ public class SqlManager : ISQLManager
             blob.FromBytes(buffer);
         }
 
+        await command.DisposeAsync();
         await reader.DisposeAsync();
         await connection.DisposeAsync();
         
@@ -172,6 +173,7 @@ public class SqlManager : ISQLManager
             blob.FromBytes(buffer);
         }
 
+        await command.DisposeAsync();
         await reader.DisposeAsync();
         await connection.DisposeAsync();
         
@@ -207,6 +209,7 @@ public class SqlManager : ISQLManager
             blob.Clubs = clubList;
         }
 
+        await command.DisposeAsync();
         await reader.DisposeAsync();
         await connection.DisposeAsync();
         
@@ -240,6 +243,10 @@ public class SqlManager : ISQLManager
         
         blob.FromBytes(buffer);
 
+        await command.DisposeAsync();
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
         return blob;
     }
 
@@ -261,6 +268,7 @@ public class SqlManager : ISQLManager
         });
 
         await command.ExecuteNonQueryAsync();
+        await command.DisposeAsync();
         await connection.CloseAsync();
         
     }
@@ -304,8 +312,9 @@ public class SqlManager : ISQLManager
         {
             new NpgsqlParameter(){ Value = badge.ID },
         });
-
+        
         await command.ExecuteNonQueryAsync();
+        await command.DisposeAsync();
         await connection.CloseAsync();
     }
 
@@ -375,6 +384,7 @@ public class SqlManager : ISQLManager
             friendRequestBlobs.Add(requestBlob);
         }
 
+        await command.DisposeAsync();
         await reader.DisposeAsync();
         await connection.DisposeAsync();
         
@@ -385,14 +395,52 @@ public class SqlManager : ISQLManager
     
     #region Block List
     
-    public Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID)
+    public async Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID)
     {
-        throw new NotImplementedException();
+        if (tableboundID.Container == 0) return new PersonListBlob();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "SELECT BLOCKED_BLOB FROM BLOCKED WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = tableboundID.Container });
+
+        var reader = await command.ExecuteReaderAsync();
+
+        await reader.ReadAsync();
+
+        PersonListBlob blob = new PersonListBlob();
+        byte[] buffer = new byte[8192];
+        var numberRead = reader.GetBytes(0, 0, buffer, 0, 8192);
+        blob.FromBytes(buffer);
+
+        await command.DisposeAsync();
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return blob;
     }
 
-    public async Task UpdateBlockList(PersonListBlob personListBlob)
+    public async Task UpdateBlockList(PersonListBlob personListBlob, MeeplIdentifier meeplIdentifier)
     {
-        throw new NotImplementedException();
+        if (meeplIdentifier.Container == 0) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "UPDATE BLOCKED SET BLOCKED_BLOB = $2 WHERE TABLEBOUND_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter() { Value = meeplIdentifier.Container },
+            new NpgsqlParameter() { Value = personListBlob.GetBytes()}
+        });
+
+        await command.ExecuteNonQueryAsync();
+
+        await command.DisposeAsync();
+        await connection.DisposeAsync();
     }
 
     #endregion

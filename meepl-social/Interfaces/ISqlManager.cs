@@ -153,8 +153,9 @@ public interface ISQLManager
     /// Updates the person list blob for a profiles blocked list
     /// </summary>
     /// <param name="personListBlob">The person list blob you want to use for the update</param>
+    /// <param name="tableboundID">The person you are updating the block list of</param>
     /// <note> This function has an upsert behavior </note>
-    public Task UpdateBlockList(PersonListBlob personListBlob);
+    public Task UpdateBlockList(PersonListBlob personListBlob, MeeplIdentifier tableboundID);
 
     #endregion
     
