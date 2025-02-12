@@ -131,7 +131,7 @@ public interface ISQLManager
     /// </summary>
     /// <param name="personListBlob">The person list blob you want to use for the update</param>
     /// <note> This function has an upsert behavior </note>
-    public Task UpdateFriendList(PersonListBlob personListBlob);
+    public Task UpdateFriendList(PersonListBlob personListBlob, MeeplIdentifier tableboundID);
     
     /// <summary>
     /// Gets the list of friend requests for a user from database

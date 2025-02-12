@@ -348,12 +348,53 @@ public class SqlManager : ISQLManager
 
     public async Task<PersonListBlob> GetFriendList(MeeplIdentifier tableboundID)
     {
-        throw new NotImplementedException();
+        if (tableboundID.Container == 0) return new PersonListBlob();
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "SELECT FRIEND_BLOB FROM FRIENDS WHERE TABLEBOUND_ID = $1";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = tableboundID.Container });
+
+        var reader = await command.ExecuteReaderAsync();
+
+        if (!reader.HasRows) return new PersonListBlob();
+
+        await reader.ReadAsync();
+        byte[] friends = new byte[8192];
+        reader.GetBytes(0, 0, friends, 0, 8192);
+
+        PersonListBlob personListBlob = new PersonListBlob();
+        personListBlob.FromBytes(friends);
+
+        await command.DisposeAsync();
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        
+        return personListBlob;
     }
 
-    public async Task UpdateFriendList(PersonListBlob personListBlob)
+    public async Task UpdateFriendList(PersonListBlob personListBlob, MeeplIdentifier tableboundID)
     {
-        throw new NotImplementedException();
+        if (tableboundID.Container == 0) return;
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "UPDATE FRIENDS SET FRIEND_BLOB = $2 WHERE TABLEBOUND_ID = $1";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter() {Value = (long) tableboundID.Container},
+            new NpgsqlParameter() {Value = personListBlob.GetBytes()}
+        });
+
+        await command.ExecuteNonQueryAsync();
+        
+        await command.DisposeAsync();
+        await connection.DisposeAsync();
     }
 
     public async Task<List<FriendRequestBlob>> GetFriendRequestList(MeeplIdentifier tableboundID)
