@@ -4,7 +4,10 @@ using Mercurial.Util;
 
 namespace Meepl.API.MercurialBlobs;
 
-public class MeeplProfile : IMercurial
+/// <summary>
+/// When you are retrieving someone elses profile this is the set of data you receive for them
+/// </summary>
+public class PublicMeeplProfile : IMercurial
 {
     #region Core Elements
 
@@ -48,33 +51,9 @@ public class MeeplProfile : IMercurial
     public ulong UniverseTitle;
 
     #endregion
-
-    #region Meepl Social
-
-    /// <summary>
-    /// All of the friends a given player has
-    /// </summary>
-    public PersonListBlob FriendsList;
     
-    /// <summary>
-    /// All of the blocked players a given player has
-    /// </summary>
-    public PersonListBlob BlockedList;
-    
-    /// <summary>
-    /// All of the friend requests a player currently has open
-    /// </summary>
-    public List<FriendRequestBlob> FriendRequestBlobs;
-
-    #endregion
-
     #region Badges
 
-    /// <summary>
-    /// All of a user's unlocked badges
-    /// </summary>
-    public List<BadgeMetadata> Unlocked_Badges = new List<BadgeMetadata>();
-    
     /// <summary>
     /// All of a user's visible badges
     /// </summary>
@@ -82,32 +61,9 @@ public class MeeplProfile : IMercurial
 
     #endregion
 
-    #region Events
-
-    /// <summary>
-    /// All of the Events this user has signed up to be a part of
-    /// </summary>
-    public List<long> Events = new List<long>();
-
-    #endregion
-
-    #region Organizations
-
-    /// <summary>
-    /// All of the clubs this user is a part of
-    /// </summary>
-    public List<long> Clubs = new List<long>();
-    
-    /// <summary>
-    /// All of the clans this user is a part of
-    /// </summary>
-    public List<long> Clans = new List<long>();
-
-    #endregion
-
     #region Constructors
 
-    public MeeplProfile()
+    public PublicMeeplProfile()
     {
         
     }
@@ -127,14 +83,7 @@ public class MeeplProfile : IMercurial
             .Append(ProfileCDNLink)
             .Append((byte)Indicator)
             .Append(UniverseTitle)
-            .Append(FriendsList)
-            .Append(BlockedList)
-            .Append(FriendRequestBlobs)
-            .Append(Unlocked_Badges)
             .Append(Visible_Badges)
-            .Append(Events)
-            .Append(Clubs)
-            .Append(Clans)
             .Build();
     }
 
@@ -148,14 +97,7 @@ public class MeeplProfile : IMercurial
             .Append(ProfileCDNLink)
             .Append((byte)Indicator)
             .Append(UniverseTitle)
-            .Append(FriendsList)
-            .Append(BlockedList)
-            .Append(FriendRequestBlobs)
-            .Append(Unlocked_Badges)
-            .Append(Visible_Badges)
-            .Append(Events)
-            .Append(Clubs)
-            .Append(Clans);
+            .Append(Visible_Badges);
     }
 
     public void FromBytes(byte[] payload)
@@ -170,14 +112,7 @@ public class MeeplProfile : IMercurial
             .Read(ref ProfileCDNLink)
             .Read(ref indicator)
             .Read(ref UniverseTitle)
-            .Read(ref FriendsList)
-            .Read(ref BlockedList)
-            .Read(ref FriendRequestBlobs)
-            .Read(ref Unlocked_Badges)
             .Read(ref Visible_Badges)
-            .Read(ref Events)
-            .Read(ref Clubs)
-            .Read(ref Clans)
             .Finish();
         Indicator = (StatusIndicator) indicator;
     }
@@ -193,14 +128,7 @@ public class MeeplProfile : IMercurial
             .Read(ref ProfileCDNLink)
             .Read(ref indicator)
             .Read(ref UniverseTitle)
-            .Read(ref FriendsList)
-            .Read(ref BlockedList)
-            .Read(ref FriendRequestBlobs)
-            .Read(ref Unlocked_Badges)
             .Read(ref Visible_Badges)
-            .Read(ref Events)
-            .Read(ref Clubs)
-            .Read(ref Clans)
             .Finish();
         Indicator = (StatusIndicator) indicator;
     }
