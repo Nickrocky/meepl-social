@@ -322,9 +322,34 @@ public class SqlManager : ISQLManager
 
     #region Event
 
-    public Task<EventBlob> GetEvent(ulong eventIdentifier)
+    public async Task<EventBlob> GetEvent(ulong eventIdentifier)
     {
-        throw new NotImplementedException();
+        if (eventIdentifier == 0) return new EventBlob();  
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+        
+        var cmd = "SELECT EVENT_BLOB FROM EVENTS WHERE EVENT_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long)eventIdentifier });
+
+        var reader = await command.ExecuteReaderAsync();
+
+        if (!reader.HasRows) return new EventBlob();
+
+        await reader.ReadAsync();
+
+        EventBlob blob = new EventBlob();
+        byte[] events = new byte[1024];
+        reader.GetBytes(0, 0, events, 0, 1024);
+        
+        blob.FromBytes(events);
+
+        await command.DisposeAsync();
+        await reader.DisposeAsync();
+        await connection.DisposeAsync();
+        return blob;
     }
 
     public async Task InsertEvent(EventBlob eventBlob)

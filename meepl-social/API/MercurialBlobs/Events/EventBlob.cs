@@ -13,43 +13,48 @@ namespace Meepl.API.MercurialBlobs;
 /// </summary>
 
 public class EventBlob : IMercurial
-{ 
+{
+    public ulong EventIdentifier;
+    
     /// <summary>
     /// The name of the Event when you hover it
     /// </summary>
     
-    [JsonProperty("Name")] public string Name { get; set; }
+    public string Name { get; set; }
     
     /// <summary>
     /// The description of the Event when you hover over it
     /// </summary>
     
-    [JsonProperty("Description")] public string Description { get; set; }
+    public string Description { get; set; }
     
     /// <summary>
     ///  Which type of event is being made
     /// </summary>
     
-    [JsonProperty("EventHostType")] public EventSource EventHostType { get; set; }
+    public EventSource EventHostType { get; set; }
     
     
     /// <summary>
     /// This is the ID of the Event Host
     /// </summary>
     
-    [JsonProperty("EventHostID")] public ulong EventHostId { get; set; }
+    public ulong EventHostId { get; set; }
     
     
     /// <summary>
     /// What is the start and end time of the event
     /// </summary>
     
-    [JsonProperty("EventTimeStart")] public DateTime EventTimeStart { get; set; }
-    [JsonProperty("EventTimeEnd")] public DateTime EventTimeEnd { get; set; }
-    
+    public DateTime EventTimeStart { get; set; }
+    public DateTime EventTimeEnd { get; set; }
+
+    #region Mercurial Serialization
+
     public byte[] GetBytes()
     {
         Pack pack = new Pack();
+        pack.Append(EventIdentifier);
         pack.Append(Name);
         pack.Append(Description);
         pack.Append((byte)EventHostType);
@@ -62,6 +67,7 @@ public class EventBlob : IMercurial
     public void AppendComponentBytes(Pack packer)
     {
         packer
+            .Append(EventIdentifier)
             .Append(Name)
             .Append(Description)
             .Append((byte)EventHostType)
@@ -83,6 +89,7 @@ public class EventBlob : IMercurial
         
         Unpack unpack = new Unpack(payload);
         unpack
+            .Read(ref EventIdentifier)
             .Read(ref name)
             .Read(ref description)
             .Read(ref eventSource)
@@ -106,6 +113,7 @@ public class EventBlob : IMercurial
         long eventTimeEnd = 0;
 
         unpack
+            .Read(ref EventIdentifier)
             .Read(ref name)
             .Read(ref description)
             .Read(ref eventSource)
@@ -119,4 +127,7 @@ public class EventBlob : IMercurial
         EventTimeEnd  = DateTime.FromBinary(eventTimeEnd);
 
     }
+
+    #endregion
+    
 }
