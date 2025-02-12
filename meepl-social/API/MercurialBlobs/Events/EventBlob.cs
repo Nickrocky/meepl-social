@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Tablebound LLC. 2025 and affiliates.
 // All rights reserved.
 
+using System.Security.Cryptography;
+using System.Text;
 using Meepl.API.Enums;
 using Mercurial.Interfaces;
 using Mercurial.Util;
@@ -129,5 +131,11 @@ public class EventBlob : IMercurial
     }
 
     #endregion
+    
+    public string GetHash()
+    {
+        var sha = SHA512.Create();
+        return Encoding.ASCII.GetString(sha.ComputeHash(GetBytes()));
+    }
     
 }

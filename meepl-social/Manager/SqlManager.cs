@@ -354,17 +354,62 @@ public class SqlManager : ISQLManager
 
     public async Task InsertEvent(EventBlob eventBlob)
     {
-        throw new NotImplementedException();
+        if (eventBlob.EventIdentifier == 0) return;  
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "INSERT INTO EVENTS (EVENT_ID, EVENT_BLOB, BLOBHASH) VALUES ($1, $2, $3);";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter() { Value = eventBlob.EventIdentifier },
+            new NpgsqlParameter() { Value = eventBlob.GetBytes() },
+            new NpgsqlParameter() { Value = eventBlob.GetHash()}
+        });
+
+        await command.ExecuteNonQueryAsync();
+        
+        await command.DisposeAsync();
+        await connection.DisposeAsync();
     }
 
     public async Task DeleteEvent(EventBlob eventBlob)
     {
-        throw new NotImplementedException();
+        if (eventBlob.EventIdentifier == 0) return;  
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "DELETE FROM EVENTS WHERE EVENT_ID = $1;";
+        var command = new NpgsqlCommand(cmd, connection);
+        
+        await command.ExecuteNonQueryAsync();
+        
+        await command.DisposeAsync();
+        await connection.DisposeAsync();
     }
 
     public async Task UpdateEvent(EventBlob eventBlob)
     {
-        throw new NotImplementedException();   
+        if (eventBlob.EventIdentifier == 0) return;  
+        
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "UPDATE EVENTS SET EVENT_BLOB = $1, BLOBHASH = $2 WHERE EVENT_ID = $3;";
+        var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.AddRange(new NpgsqlParameter[]
+        {
+            new NpgsqlParameter() { Value = eventBlob.GetBytes() },
+            new NpgsqlParameter() { Value = eventBlob.GetHash()},
+            new NpgsqlParameter() { Value = eventBlob.EventIdentifier }
+        });
+        
+        await command.ExecuteNonQueryAsync();
+        
+        await command.DisposeAsync();
+        await connection.DisposeAsync(); 
     }
 
     #endregion
