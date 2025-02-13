@@ -7,7 +7,7 @@ namespace Meepl.Managers;
 public class ProfileManager
 {
     private static Dictionary<ulong, MeeplProfile> Profiles = new Dictionary<ulong, MeeplProfile>();
-    
+    private static List<ulong> UsernameUpdateList = new List<ulong>();
     private static ISQLManager SQLManagerProvider;
     private static ulong StartingNumber = 1;
     private ushort ShardIdentifier;
@@ -44,6 +44,27 @@ public class ProfileManager
         return profile;
     }
 
+    public static async Task<bool> CheckForUsernameOnForceChangeList(ulong tid)
+    {
+        if (!UsernameUpdateList.Contains(tid))
+        {
+            await LoadAllUsernameForceChange();
+            if (!UsernameUpdateList.Contains(tid)) return false;
+            return true;
+        }
+        return true;
+    }
+
+    public static async Task UpdateUsername(ulong tid)
+    {
+        
+    }
+    
+    public static async Task LoadAllUsernameForceChange()
+    {
+        UsernameUpdateList = await SqlManager.Get().GetUsernameForceChangeList();
+    }
+    
     /// <summary>
     /// If a given Tablebound Profile exists
     /// </summary>
@@ -55,4 +76,9 @@ public class ProfileManager
         return profile.MeeplIdentifier.IsEmpty();
     }
 
+    public static void SetStatusIndicator(ref MeeplProfile profile, StatusIndicator statusIndicator)
+    {
+        profile.Indicator = statusIndicator;
+    }
+    
 }

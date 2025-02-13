@@ -554,6 +554,24 @@ public class SqlManager : ISQLManager
         await connection.DisposeAsync();
     }
 
+    public async Task<List<ulong>> GetUsernameForceChangeList()
+    {
+        var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var cmd = "SELECT TABLEBOUND_ID FROM USERNAME_FORCE_CHANGE;";
+        var command = new NpgsqlCommand(cmd, connection);
+
+        var reader = await command.ExecuteReaderAsync();
+        List<ulong> forceChangeList = new List<ulong>();
+        while (await reader.ReadAsync())
+        {
+            forceChangeList.Add((ulong) reader.GetInt64(0));
+        }
+
+        return forceChangeList;
+    }
+
     #endregion
     
     

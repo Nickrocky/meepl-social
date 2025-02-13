@@ -47,6 +47,55 @@ public class ProfileController : ControllerBase
             Message = ErrorCodes.PROFILE_PERSONAL_RETRIEVAL_SUCCESS
         }.GetBytes(), "application/octet-stream");
     }
-    
 
+    public async Task<ActionResult<byte[]>> UpdateBio()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ActionResult<byte[]>> UpdateAction()
+    {
+        throw new NotImplementedException();
+
+    }
+
+    public async Task<ActionResult<byte[]>> UpdateUsername()
+    {
+        var identity = HttpUtils.ParseIdentityClaim(HttpContext);
+        if(identity == 0) return File(new ProfileUpdateResponse()
+        {
+            Msg = ErrorCodes.PROFILE_INVALID_PROFILE
+        }.GetBytes(), "application/octet-stream");
+        if(!await ProfileManager.CheckForUsernameOnForceChangeList(identity)) return File(new ProfileUpdateResponse()
+        {
+            Msg = ErrorCodes.PROFILE_NOT_ON_USERNAME_CHANGE_LIST
+        }.GetBytes(), "application/octet-stream");
+        
+    }
+
+    public async Task<ActionResult<byte[]>> UpdateProfilePicture()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Updates a players status
+    /// </summary>
+    /// <param name="s">The status indicator you want to update your profile to</param>
+    /// <returns>Update response</returns>
+    public async Task<ActionResult<byte[]>> UpdateStatus(byte s)
+    {
+        var identity = HttpUtils.ParseIdentityClaim(HttpContext);
+        if(identity == 0) return File(new ProfileUpdateResponse()
+        {
+            Msg = ErrorCodes.PROFILE_INVALID_PROFILE
+        }.GetBytes(), "application/octet-stream");
+
+        var profile = await ProfileManager.GetProfile(identity);
+        ProfileManager.SetStatusIndicator(ref profile, (StatusIndicator) s);
+        return File(new ProfileUpdateResponse()
+        {
+            Msg = ErrorCodes.PROFILE_UPDATED_STATUS_INDICATOR_SUCCESSFULLY
+        }.GetBytes(), "application/octet-stream");
+    }
 }

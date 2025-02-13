@@ -11,4 +11,6 @@ public class ErrorCodes
 
     public static readonly string PROFILE_PERSONAL_RETRIEVAL_SUCCESS = "P0";
     public static readonly string PROFILE_INVALID_PROFILE = "P1";
+    public static readonly string PROFILE_UPDATED_STATUS_INDICATOR_SUCCESSFULLY = "P2";
+    public static readonly string PROFILE_NOT_ON_USERNAME_CHANGE_LIST = "P3";
 }

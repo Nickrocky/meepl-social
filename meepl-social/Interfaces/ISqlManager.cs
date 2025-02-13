@@ -158,5 +158,13 @@ public interface ISQLManager
     public Task UpdateBlockList(PersonListBlob personListBlob, MeeplIdentifier tableboundID);
 
     #endregion
-    
+
+    #region Username Forced Changes
+
+    /// <summary>
+    /// Gets the full list of all usernames that are being forced to change their username
+    /// </summary>
+    public Task<List<ulong>> GetUsernameForceChangeList();
+
+    #endregion
 }
