@@ -84,7 +84,7 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// All of the friend requests a player currently has open
     /// </summary>
-    public List<FriendRequestBlob> FriendRequestBlobs;
+    [JsonProperty("FriendRequestBlobs")] public List<FriendRequestBlob> FriendRequestBlobs;
 
     #endregion
 
@@ -93,12 +93,12 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// All of a user's unlocked badges
     /// </summary>
-    public List<BadgeMetadata> Unlocked_Badges = new List<BadgeMetadata>();
+    [JsonProperty("UnlockedBadges")] public List<BadgeMetadata> Unlocked_Badges {get; set;}
     
     /// <summary>
     /// All of a user's visible badges
     /// </summary>
-    public List<BadgeMetadata> Visible_Badges = new List<BadgeMetadata>();
+    [JsonProperty("VisibleBadges")] public List<BadgeMetadata> Visible_Badges { get; set; }
 
     #endregion
 
@@ -107,7 +107,7 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// All of the Events this user has signed up to be a part of
     /// </summary>
-    public List<long> Events = new List<long>();
+    [JsonProperty("Events")] public List<long> Events { get; set; }
 
     #endregion
 
@@ -116,12 +116,12 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// All of the clubs this user is a part of
     /// </summary>
-    public List<long> Clubs = new List<long>();
+    [JsonProperty("Clubs")] public List<long> Clubs { get; set; }
     
     /// <summary>
     /// All of the clans this user is a part of
     /// </summary>
-    public List<long> Clans = new List<long>();
+    [JsonProperty("Clans")] public List<long> Clans {get; set;}
 
     #endregion
 
@@ -129,7 +129,11 @@ public class MeeplProfile : IMercurial
 
     public MeeplProfile()
     {
-        
+        Unlocked_Badges = new List<BadgeMetadata>();
+        Visible_Badges = new List<BadgeMetadata>();
+        Events = new List<long>();
+        Clubs = new List<long>();
+        Clans = new List<long>();
     }
 
     #endregion
