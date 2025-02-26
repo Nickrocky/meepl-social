@@ -129,6 +129,16 @@ public class MeeplProfile : IMercurial
 
     public MeeplProfile()
     {
+        MeeplIdentifier = new MeeplIdentifier();
+        Username = "";
+        Biography = "";
+        Action = "";
+        ProfileCDNLink = "";
+        Indicator = StatusIndicator.OFFLINE;
+        UniverseTitle = 0;
+        FriendsList = new PersonListBlob();
+        BlockedList = new PersonListBlob();
+        FriendRequestBlobs = new List<FriendRequestBlob>();
         Unlocked_Badges = new List<BadgeMetadata>();
         Visible_Badges = new List<BadgeMetadata>();
         Events = new List<long>();
@@ -184,16 +194,25 @@ public class MeeplProfile : IMercurial
 
     public void FromBytes(byte[] payload)
     {
+        API.MeeplIdentifier meeplIdentifier = MeeplIdentifier.Parse(0);
+        string username = "", bio = "", action = "", cdn = "";
+        ulong universeTitle = 0;
+        List<BadgeMetadata> Unlocked_Badges = new List<BadgeMetadata>(),
+            Visible_Badges = new List<BadgeMetadata>();
+        List<long> Clubs = new List<long>(),
+            Clans = new List<long>();
+        List<long> Events = new List<long>();
+
         byte indicator = 0;
         Unpack unpack = new Unpack(payload);
         unpack
-            .Read(ref MeeplIdentifier)
-            .Read(ref Username)
-            .Read(ref Biography)
-            .Read(ref Action)
-            .Read(ref ProfileCDNLink)
+            .Read(ref meeplIdentifier)
+            .Read(ref username)
+            .Read(ref bio)
+            .Read(ref action)
+            .Read(ref cdn)
             .Read(ref indicator)
-            .Read(ref UniverseTitle)
+            .Read(ref universeTitle)
             .Read(ref FriendsList)
             .Read(ref BlockedList)
             .Read(ref FriendRequestBlobs)
@@ -204,19 +223,39 @@ public class MeeplProfile : IMercurial
             .Read(ref Clans)
             .Finish();
         Indicator = (StatusIndicator) indicator;
+        MeeplIdentifier = meeplIdentifier;
+        Username = username;
+        Biography = bio;
+        Action = action;
+        ProfileCDNLink = cdn;
+        UniverseTitle = universeTitle;
+        this.Unlocked_Badges = Unlocked_Badges;
+        this.Visible_Badges = Visible_Badges;
+        this.Events = Events;
+        this.Clubs = Clubs;
+        this.Clans = Clans;
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
+        API.MeeplIdentifier meeplIdentifier = MeeplIdentifier.Parse(0);
+        string username = "", bio = "", action = "", cdn = "";
+        ulong universeTitle = 0;
+        List<BadgeMetadata> Unlocked_Badges = new List<BadgeMetadata>(),
+            Visible_Badges = new List<BadgeMetadata>();
+        List<long> Clubs = new List<long>(),
+            Clans = new List<long>();
+        List<long> Events = new List<long>();
+
         byte indicator = 0;
         unpack
-            .Read(ref MeeplIdentifier)
-            .Read(ref Username)
-            .Read(ref Biography)
-            .Read(ref Action)
-            .Read(ref ProfileCDNLink)
+            .Read(ref meeplIdentifier)
+            .Read(ref username)
+            .Read(ref bio)
+            .Read(ref action)
+            .Read(ref cdn)
             .Read(ref indicator)
-            .Read(ref UniverseTitle)
+            .Read(ref universeTitle)
             .Read(ref FriendsList)
             .Read(ref BlockedList)
             .Read(ref FriendRequestBlobs)
@@ -227,6 +266,17 @@ public class MeeplProfile : IMercurial
             .Read(ref Clans)
             .Finish();
         Indicator = (StatusIndicator) indicator;
+        MeeplIdentifier = meeplIdentifier;
+        Username = username;
+        Biography = bio;
+        Action = action;
+        ProfileCDNLink = cdn;
+        UniverseTitle = universeTitle;
+        this.Unlocked_Badges = Unlocked_Badges;
+        this.Visible_Badges = Visible_Badges;
+        this.Events = Events;
+        this.Clubs = Clubs;
+        this.Clans = Clans;
     }
 
     #endregion

@@ -26,8 +26,8 @@ AnsiConsole.Markup("[#FFFFFF]Meepl API Version: " + Globals.MEEPL_API_VERSION+"[
 AnsiConsole.Write(consoleRule);
 
 var builder = WebApplication.CreateBuilder(args);
-//string value = builder.Configuration["meeplconf:serverBind"]; //Leave this commented if you are testing local, this is here for when we deploy
-//builder.WebHost.UseUrls(value);
+string value = builder.Configuration["meeplconf:serverBind"]; //Leave this commented if you are testing local, this is here for when we deploy
+builder.WebHost.UseUrls(value);
 builder.Services.AddControllers();
 
 
@@ -91,10 +91,10 @@ SqlManager manager = new SqlManager();
 manager.Init();
 
 ProfileManager profileManager = new ProfileManager();
-profileManager.Init(manager);
+await profileManager.Init(manager);
 
 FriendManager friendManager = new FriendManager();
-friendManager.Init(manager);
+await friendManager.Init(manager);
 
 
 var app = builder.Build();

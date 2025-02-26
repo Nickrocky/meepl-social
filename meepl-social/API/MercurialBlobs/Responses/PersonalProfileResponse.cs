@@ -1,12 +1,14 @@
 using Mercurial.Interfaces;
 using Mercurial.Util;
+using Newtonsoft.Json;
 
 namespace Meepl.API.MercurialBlobs.Responses;
 
+[Serializable]
 public class PersonalProfileResponse : IMercurial
 {
-    public MeeplProfile Profile;
-    public string Message;
+    [JsonProperty("Profile")] public MeeplProfile Profile { get; set; }
+    [JsonProperty("Msg")] public string Message { get; set; }
     
     public byte[] GetBytes()
     {
@@ -26,17 +28,21 @@ public class PersonalProfileResponse : IMercurial
 
     public void FromBytes(byte[] payload)
     {
+        MeeplProfile profile = new MeeplProfile();
+        string msg = "";
         Unpack unpack = new Unpack(payload);
         unpack
-            .Read(ref Profile)
-            .Read(ref Message)
+            .Read(ref profile)
+            .Read(ref msg)
             .Finish();
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
+        MeeplProfile profile = new MeeplProfile();
+        string msg = "";
         unpack
-            .Read(ref Profile)
-            .Read(ref Message);
+            .Read(ref profile)
+            .Read(ref msg);
     }
 }

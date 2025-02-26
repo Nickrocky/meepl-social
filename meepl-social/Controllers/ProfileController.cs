@@ -13,7 +13,7 @@ namespace Meepl.Controllers;
 [AllowAnonymous]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
-[Route("profile")]
+[Route("social/profile")]
 public class ProfileController : ControllerBase
 {
     private readonly ILogger<ProfileController> _logger;
@@ -23,13 +23,9 @@ public class ProfileController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// Looks to see if a name is taken
-    /// </summary>
-    /// <param name="username">The username you are attempting to select</param>
-    /// <returns>If the name is taken or not</returns>
+
     [HttpGet]
-    [Route("personal")]
+    [Route("game")]
     public async Task<ActionResult<byte[]>> GetPersonalProfile()
     {
         var identity = HttpUtils.ParseIdentityClaim(HttpContext);
@@ -59,7 +55,12 @@ public class ProfileController : ControllerBase
 
     }
 
-    public async Task<ActionResult<byte[]>> UpdateUsername()
+    /// <summary>
+    /// Looks to see if a name is taken
+    /// </summary>
+    /// <param name="username">The username you are attempting to select</param>
+    /// <returns>If the name is taken or not</returns>
+    /*public async Task<ActionResult<byte[]>> UpdateUsername()
     {
         var identity = HttpUtils.ParseIdentityClaim(HttpContext);
         if(identity == 0) return File(new ProfileUpdateResponse()
@@ -71,7 +72,7 @@ public class ProfileController : ControllerBase
             Msg = ErrorCodes.PROFILE_NOT_ON_USERNAME_CHANGE_LIST
         }.GetBytes(), "application/octet-stream");
         
-    }
+    }*/
 
     public async Task<ActionResult<byte[]>> UpdateProfilePicture()
     {
@@ -99,14 +100,17 @@ public class ProfileController : ControllerBase
         }.GetBytes(), "application/octet-stream");
     }
     
+    [HttpGet]
+    [Route("web")]
     public async Task<ActionResult<MeeplProfile>> GetPersonalProfileAsync()
     {
         var identity = HttpUtils.ParseIdentityClaim(HttpContext);
-        if(identity == 0) return File(new PersonalProfileResponse()
-        {
-            Profile = new MeeplProfile(),
-            Message = ErrorCodes.PROFILE_INVALID_PROFILE
-        }.GetBytes(), "application/octet-stream");
+        if (identity == 0)
+            return Ok(new PersonalProfileResponse()
+            {
+                Profile = new MeeplProfile(),
+                Message = ErrorCodes.PROFILE_INVALID_PROFILE
+            });
         Console.WriteLine("Attempting to check the following tablebound account: " + identity);
         var profile = await ProfileManager.GetProfile(identity);
         return Ok(profile);
