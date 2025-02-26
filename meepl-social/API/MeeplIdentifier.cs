@@ -4,6 +4,7 @@
 using Meepl.API.Enums;
 using Mercurial.Interfaces;
 using Mercurial.Util;
+using Newtonsoft.Json;
 
 namespace Meepl.API;
 
@@ -16,15 +17,15 @@ public class MeeplIdentifier : IMercurial
     /// <summary>
     /// This is the thing that is actually storing all of the weird data we are putting in
     /// </summary>
-    public ulong Container;
+    [JsonProperty("Container")] public ulong Container { get; set; }
     
     private static readonly ulong AREA_IDENTIFIER_MASK = 0xFC00000000000000;
     private static readonly ulong SHARD_MASK = 0x03FF000000000000;
     private static readonly ulong IDENTIFIER_MASK = 0x0000FFFFFFFFFFFF;
 
-    private AreaIdentifier AreaIdentifier;
-    private ushort ShardIdentifier;
-    private ulong UserIdentifier;
+    [JsonIgnore] private AreaIdentifier AreaIdentifier;
+    [JsonIgnore] private ushort ShardIdentifier;
+    [JsonIgnore] private ulong UserIdentifier;
 
     public bool IsEmpty()
     {
@@ -99,15 +100,19 @@ public class MeeplIdentifier : IMercurial
     public void FromBytes(byte[] payload)
     {
         Unpack unpack = new Unpack(payload);
+        ulong container = 0;
         unpack
-            .Read(ref Container)
+            .Read(ref container)
             .Finish();
+        Container = container;
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
+        ulong container = 0;
         unpack
-            .Read(ref Container);
+            .Read(ref container);
+        Container = container;
     }
 
     #endregion

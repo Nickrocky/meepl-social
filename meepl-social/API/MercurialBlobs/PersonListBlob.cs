@@ -15,6 +15,29 @@ public class PersonListBlob : IMercurial
     /// </summary>
     public List<MeeplIdentifier> PersonList = new List<MeeplIdentifier>();
 
+    /// <summary>
+    /// Gets a list of all of the people on the list as a ulong list
+    /// </summary>
+    /// <returns>A new ulong list</returns>
+    public List<ulong> GetPersonList()
+    {
+        List<ulong> personList = new();
+        foreach (var person in PersonList)
+        {
+            personList.Add(person.Container);
+        }
+        return personList;
+    }
+
+    public void FromList(List<ulong> personList)
+    {
+        PersonList = new List<MeeplIdentifier>();
+        foreach (var person in personList)
+        {
+            PersonList.Add(MeeplIdentifier.Parse(person));
+        }
+    }
+    
     public byte[] GetBytes()
     {
         Pack pack = new Pack();

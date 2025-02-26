@@ -1,32 +1,54 @@
 using Meepl.API.Enums;
 using Mercurial.Interfaces;
 using Mercurial.Util;
+using Newtonsoft.Json;
 
 namespace Meepl.API.MercurialBlobs;
 
 public class FriendRequestBlob : IMercurial
 {
-    public MeeplIdentifier Issuer;
-    public MeeplIdentifier Recipient;
-    public string Message;
+    [JsonProperty("Issuer")] public MeeplIdentifier Issuer { get; set; }
+    [JsonProperty("Recipient")] public MeeplIdentifier Recipient { get; set; }
+    [JsonProperty("Message")] public string Message { get; set; }
 
     public byte[] GetBytes()
     {
-        throw new NotImplementedException();
+        Pack pack = new();
+        return pack.Append(Issuer)
+            .Append(Recipient)
+            .Append(Message)
+            .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
     {
-        throw new NotImplementedException();
+        packer
+            .Append(Issuer)
+            .Append(Recipient)
+            .Append(Message);
     }
 
     public void FromBytes(byte[] payload)
     {
-        throw new NotImplementedException();
+        MeeplIdentifier issuer = new();
+        MeeplIdentifier recipient = new();
+        string message = "";
+        Unpack unpack = new Unpack(payload);
+        unpack
+            .Read(ref issuer)
+            .Read(ref recipient)
+            .Read(ref message)
+            .Finish();
     }
 
     public void ComponentFromBytes(Unpack unpack)
     {
-        throw new NotImplementedException();
+        MeeplIdentifier issuer = new();
+        MeeplIdentifier recipient = new();
+        string message = "";
+        unpack
+            .Read(ref issuer)
+            .Read(ref recipient)
+            .Read(ref message);
     }
 }

@@ -1,6 +1,7 @@
 using Meepl.API.MercurialBlobs.Badges;
 using Mercurial.Interfaces;
 using Mercurial.Util;
+using Newtonsoft.Json;
 
 namespace Meepl.API.MercurialBlobs;
 
@@ -11,32 +12,39 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// This is the real backend identifier we use to identify a user
     /// </summary>
-    public MeeplIdentifier MeeplIdentifier;
+    [JsonProperty("MeeplIdentifier")] public MeeplIdentifier MeeplIdentifier { get; set; }
 
     /// <summary>
     /// The username of the user you can find this player by in Meepl
     /// </summary>
-    public string Username;
+    [JsonProperty("Username")] public string Username  { get; set; }
 
     /// <summary>
     /// The short bio of the user found on their profile in Meepl
     /// </summary>
-    public string Biography;
+    [JsonProperty("Biography")] public string Biography  { get; set; }
 
     /// <summary>
     /// The 'action' text for a user "PlayerA is now playing Overrealms"
     /// </summary>
-    public string Action;
+    [JsonProperty("Action")] public string Action  { get; set; }
 
     /// <summary>
     /// The cdn link to the profile image for this player
     /// </summary>
-    public string ProfileCDNLink;
+    [JsonProperty("CDN")] public string ProfileCDNLink  { get; set; }
 
     /// <summary>
     /// The status indicator of a player ex. online, offline, away, etc.
     /// </summary>
-    public StatusIndicator Indicator;
+    [JsonIgnore] public StatusIndicator Indicator;
+
+    [JsonProperty("StatusIndicator")]
+    private byte indicator
+    {
+        get => (byte)Indicator;
+        set => Indicator = (StatusIndicator)value;
+    }
 
     #endregion
 
@@ -45,7 +53,7 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// A toggle-able title for a profile that is unlocked via Meepl Universe
     /// </summary>
-    public ulong UniverseTitle;
+    [JsonProperty("UniverseTitle")] public ulong UniverseTitle { get; set; }
 
     #endregion
 
@@ -54,12 +62,24 @@ public class MeeplProfile : IMercurial
     /// <summary>
     /// All of the friends a given player has
     /// </summary>
-    public PersonListBlob FriendsList;
-    
+    [JsonIgnore] public PersonListBlob FriendsList;
+    [JsonProperty("FriendsList")]
+    private List<ulong> FriendsListIds
+    {
+        get => FriendsList.GetPersonList();
+        set => FriendsList.FromList(value);
+    }
+
     /// <summary>
     /// All of the blocked players a given player has
     /// </summary>
-    public PersonListBlob BlockedList;
+    [JsonIgnore] public PersonListBlob BlockedList;
+    [JsonProperty("BlockedList")] private List<ulong> BlockedListIds
+    {
+        get => BlockedList.GetPersonList();
+        set => BlockedList.FromList(value);
+    }
+    
     
     /// <summary>
     /// All of the friend requests a player currently has open

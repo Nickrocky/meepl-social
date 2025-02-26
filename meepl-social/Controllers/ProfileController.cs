@@ -47,7 +47,7 @@ public class ProfileController : ControllerBase
             Message = ErrorCodes.PROFILE_PERSONAL_RETRIEVAL_SUCCESS
         }.GetBytes(), "application/octet-stream");
     }
-
+    
     public async Task<ActionResult<byte[]>> UpdateBio()
     {
         throw new NotImplementedException();
@@ -98,4 +98,18 @@ public class ProfileController : ControllerBase
             Msg = ErrorCodes.PROFILE_UPDATED_STATUS_INDICATOR_SUCCESSFULLY
         }.GetBytes(), "application/octet-stream");
     }
+    
+    public async Task<ActionResult<MeeplProfile>> GetPersonalProfileAsync()
+    {
+        var identity = HttpUtils.ParseIdentityClaim(HttpContext);
+        if(identity == 0) return File(new PersonalProfileResponse()
+        {
+            Profile = new MeeplProfile(),
+            Message = ErrorCodes.PROFILE_INVALID_PROFILE
+        }.GetBytes(), "application/octet-stream");
+        Console.WriteLine("Attempting to check the following tablebound account: " + identity);
+        var profile = await ProfileManager.GetProfile(identity);
+        return Ok(profile);
+    }
+    
 }
