@@ -28,6 +28,13 @@ AnsiConsole.Write(consoleRule);
 var builder = WebApplication.CreateBuilder(args);
 string value = builder.Configuration["meeplconf:serverBind"]; //Leave this commented if you are testing local, this is here for when we deploy
 builder.WebHost.UseUrls(value);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin() // Allows all origins (you can change this to specify certain origins)
+            .AllowAnyMethod() // Allows all HTTP methods
+            .AllowAnyHeader()); //Allows all HTTP Headers
+});
 builder.Services.AddControllers();
 
 
@@ -98,6 +105,7 @@ await friendManager.Init(manager);
 
 
 var app = builder.Build();
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
