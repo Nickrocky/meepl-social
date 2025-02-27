@@ -28,6 +28,7 @@ AnsiConsole.Write(consoleRule);
 var builder = WebApplication.CreateBuilder(args);
 string value = builder.Configuration["meeplconf:serverBind"]; //Leave this commented if you are testing local, this is here for when we deploy
 builder.WebHost.UseUrls(value);
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -35,8 +36,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod() // Allows all HTTP methods
             .AllowAnyHeader()); //Allows all HTTP Headers
 });
-builder.Services.AddControllers();
-
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -105,7 +104,17 @@ await friendManager.Init(manager);
 
 
 var app = builder.Build();
-app.UseCors("AllowAll");
+/*app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Request Method: {context.Request.Method}");
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+        return;
+    }
+    await next();
+});*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -113,7 +122,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

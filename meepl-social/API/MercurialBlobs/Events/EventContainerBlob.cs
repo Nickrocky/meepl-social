@@ -5,7 +5,7 @@ namespace Meepl.API.MercurialBlobs.Events;
 
 public class EventContainerBlob : IMercurial
 {
-    public List<long> Events;
+    public List<long> Events = new List<long>();
     public byte[] GetBytes()
     {
         Pack pack = new Pack();

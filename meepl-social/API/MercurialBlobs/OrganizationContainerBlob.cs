@@ -8,8 +8,8 @@ namespace Meepl.API.MercurialBlobs;
 /// </summary>
 public class OrganizationContainerBlob : IMercurial
 {
-    public OrganizationListBlob Clubs;
-    public OrganizationListBlob Clans;
+    public OrganizationListBlob Clubs = new OrganizationListBlob();
+    public OrganizationListBlob Clans = new OrganizationListBlob();
     public byte[] GetBytes()
     {
         Pack pack = new Pack();

@@ -6,6 +6,7 @@ using Meepl.API.MercurialBlobs.Badges;
 using Meepl.API.MercurialBlobs.Events;
 using Meepl.Social.Interfaces;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace Meepl.Managers;
 
@@ -131,7 +132,7 @@ public class SqlManager : ISQLManager
 
         var cmd = "SELECT BADGE_CONTAINER_BLOB FROM PROFILE_BADGES WHERE TABLEBOUND_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
-        command.Parameters.Add(new NpgsqlParameter() { Value = (long)meeplIdentifier.Container });
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) meeplIdentifier.Container });
 
         var reader = await command.ExecuteReaderAsync();
 
@@ -161,6 +162,7 @@ public class SqlManager : ISQLManager
         
         var cmd = "SELECT EVENT_CONTAINER_BLOB FROM PROFILE_EVENTS WHERE TABLEBOUND_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long)meeplIdentifier.Container });
         
         var reader = await command.ExecuteReaderAsync();
 
@@ -189,6 +191,7 @@ public class SqlManager : ISQLManager
         
         var cmd = "SELECT CLAN_CONTAINER_BLOB, CLUB_CONTAINER_BLOB FROM PROFILE_MEMBERSHIPS WHERE TABLEBOUND_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) meeplIdentifier.Container });
         
         var reader = await command.ExecuteReaderAsync();
 
@@ -262,7 +265,7 @@ public class SqlManager : ISQLManager
         
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter(){ Value = badge.ID },
+            new NpgsqlParameter(){ Value = (long) badge.ID },
             new NpgsqlParameter(){ Value = badge.GetBytes() },
             new NpgsqlParameter(){ Value = badge.GetHash() },
         });
@@ -289,7 +292,7 @@ public class SqlManager : ISQLManager
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter(){ Value = badge.ID },
+            new NpgsqlParameter(){ Value = (long) badge.ID },
             new NpgsqlParameter(){ Value = badge.GetBytes() },
             new NpgsqlParameter(){ Value = badge.GetHash() },
         });
@@ -310,7 +313,7 @@ public class SqlManager : ISQLManager
         
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter(){ Value = badge.ID },
+            new NpgsqlParameter(){ Value = (long) badge.ID },
         });
         
         await command.ExecuteNonQueryAsync();
@@ -363,7 +366,7 @@ public class SqlManager : ISQLManager
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter() { Value = eventBlob.EventIdentifier },
+            new NpgsqlParameter() { Value = (long) eventBlob.EventIdentifier },
             new NpgsqlParameter() { Value = eventBlob.GetBytes() },
             new NpgsqlParameter() { Value = eventBlob.GetHash()}
         });
@@ -383,6 +386,7 @@ public class SqlManager : ISQLManager
 
         var cmd = "DELETE FROM EVENTS WHERE EVENT_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) eventBlob.EventIdentifier });
         
         await command.ExecuteNonQueryAsync();
         
@@ -403,7 +407,7 @@ public class SqlManager : ISQLManager
         {
             new NpgsqlParameter() { Value = eventBlob.GetBytes() },
             new NpgsqlParameter() { Value = eventBlob.GetHash()},
-            new NpgsqlParameter() { Value = eventBlob.EventIdentifier }
+            new NpgsqlParameter() { Value = (long) eventBlob.EventIdentifier }
         });
         
         await command.ExecuteNonQueryAsync();
@@ -425,7 +429,7 @@ public class SqlManager : ISQLManager
 
         var cmd = "SELECT FRIEND_BLOB FROM FRIENDS WHERE TABLEBOUND_ID = $1";
         var command = new NpgsqlCommand(cmd, connection);
-        command.Parameters.Add(new NpgsqlParameter() { Value = tableboundID.Container });
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) tableboundID.Container });
 
         var reader = await command.ExecuteReaderAsync();
 
@@ -476,13 +480,17 @@ public class SqlManager : ISQLManager
 
         var cmd = "SELECT * FROM FRIEND_REQUESTS WHERE RECIPIENT = $1";
         var command = new NpgsqlCommand(cmd, connection);
-
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) tableboundID.Container });
+        
         var reader = await command.ExecuteReaderAsync();
 
         List<FriendRequestBlob> friendRequestBlobs = new List<FriendRequestBlob>();
         string msg = "";
         MeeplIdentifier issuer, recipient;
         FriendRequestBlob requestBlob;
+        
+        if (!reader.HasRows) return friendRequestBlobs;
+        
         while (await reader.ReadAsync())
         {
             requestBlob = new FriendRequestBlob();
@@ -515,10 +523,11 @@ public class SqlManager : ISQLManager
 
         var cmd = "SELECT BLOCKED_BLOB FROM BLOCKED WHERE TABLEBOUND_ID = $1;";
         var command = new NpgsqlCommand(cmd, connection);
-        command.Parameters.Add(new NpgsqlParameter() { Value = tableboundID.Container });
+        command.Parameters.Add(new NpgsqlParameter() { Value = (long) tableboundID.Container });
 
         var reader = await command.ExecuteReaderAsync();
 
+        if (!reader.HasRows) return new PersonListBlob();
         await reader.ReadAsync();
 
         PersonListBlob blob = new PersonListBlob();
@@ -544,7 +553,7 @@ public class SqlManager : ISQLManager
         var command = new NpgsqlCommand(cmd, connection);
         command.Parameters.AddRange(new NpgsqlParameter[]
         {
-            new NpgsqlParameter() { Value = meeplIdentifier.Container },
+            new NpgsqlParameter() { Value = (long) meeplIdentifier.Container },
             new NpgsqlParameter() { Value = personListBlob.GetBytes()}
         });
 

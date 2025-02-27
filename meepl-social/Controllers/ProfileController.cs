@@ -44,7 +44,7 @@ public class ProfileController : ControllerBase
         }.GetBytes(), "application/octet-stream");
     }
     
-    public async Task<ActionResult<byte[]>> UpdateBio()
+    /*public async Task<ActionResult<byte[]>> UpdateBio()
     {
         throw new NotImplementedException();
     }
@@ -53,7 +53,7 @@ public class ProfileController : ControllerBase
     {
         throw new NotImplementedException();
 
-    }
+    }/*
 
     /// <summary>
     /// Looks to see if a name is taken
@@ -74,17 +74,17 @@ public class ProfileController : ControllerBase
         
     }*/
 
-    public async Task<ActionResult<byte[]>> UpdateProfilePicture()
+    /*public async Task<ActionResult<byte[]>> UpdateProfilePicture()
     {
         throw new NotImplementedException();
-    }
+    }*/
 
     /// <summary>
     /// Updates a players status
     /// </summary>
     /// <param name="s">The status indicator you want to update your profile to</param>
     /// <returns>Update response</returns>
-    public async Task<ActionResult<byte[]>> UpdateStatus(byte s)
+    /*public async Task<ActionResult<byte[]>> UpdateStatus(byte s)
     {
         var identity = HttpUtils.ParseIdentityClaim(HttpContext);
         if(identity == 0) return File(new ProfileUpdateResponse()
@@ -98,7 +98,7 @@ public class ProfileController : ControllerBase
         {
             Msg = ErrorCodes.PROFILE_UPDATED_STATUS_INDICATOR_SUCCESSFULLY
         }.GetBytes(), "application/octet-stream");
-    }
+    }*/
     
     [HttpGet]
     [Route("web")]
