@@ -581,6 +581,18 @@ public class SqlManager : ISQLManager
         return forceChangeList;
     }
 
+  
+
+    #endregion
+
+
+    #region ServerLists
+
+    public async Task<ServerListBlob> GetServerListBlob(MeeplIdentifier meeplIdentifier)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
     
     

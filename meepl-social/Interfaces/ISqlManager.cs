@@ -167,4 +167,15 @@ public interface ISQLManager
     public Task<List<ulong>> GetUsernameForceChangeList();
 
     #endregion
+
+    #region Server Lists
+
+    /// <summary>
+    /// Gets the user's server list blob from our storage
+    /// </summary>
+    /// <param name="meeplIdentifier">The user that is trying to get their blob's identifier</param>
+    /// <returns>A new instance of the ServerListBlob stored for this user or an empty object</returns>
+    public Task<ServerListBlob> GetServerListBlob(MeeplIdentifier meeplIdentifier);
+
+    #endregion
 }
