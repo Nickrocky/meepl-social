@@ -1,3 +1,6 @@
+using Meepl.API;
+using Meepl.API.MercurialBlobs;
+
 namespace Meepl.Managers;
 
 public class ServerListManager
@@ -8,7 +11,9 @@ public class ServerListManager
     {
         return instance;
     }
-    
+
+    public Dictionary<MeeplIdentifier, ServerListBlob> ServerListBlobs = new Dictionary<MeeplIdentifier, ServerListBlob>();
+
     
     
 }

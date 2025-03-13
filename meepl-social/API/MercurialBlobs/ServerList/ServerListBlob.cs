@@ -7,7 +7,6 @@ public class ServerListBlob : IMercurial
 {
     private List<ServerEntry> ServerList;
 
-
     public byte[] GetBytes()
     {
         throw new NotSupportedException();
