@@ -102,6 +102,9 @@ await profileManager.Init(manager);
 FriendManager friendManager = new FriendManager();
 await friendManager.Init(manager);
 
+ServerListManager serverListManager = new ServerListManager();
+serverListManager.Init(manager);
+
 
 var app = builder.Build();
 /*app.Use(async (context, next) =>

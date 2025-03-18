@@ -5,8 +5,23 @@ namespace Meepl.API.MercurialBlobs;
 
 public class ServerListBlob : IMercurial
 {
-    private List<ServerEntry> ServerList;
+    private List<ServerEntry> ServerList = new List<ServerEntry>();
 
+    public void AddServerEntry(ServerEntry entry)
+    {
+        ServerList.Add(entry);
+    }
+
+    public void RemoveServerEntry(ServerEntry entry)
+    {
+        List<ServerEntry> newList = new List<ServerEntry>();
+        foreach (var serverEntry in ServerList)
+        {
+            if(serverEntry.IPAddress.Equals(entry.IPAddress) && serverEntry.Port == entry.Port) continue;
+            newList.Add(serverEntry);
+        }
+    }
+    
     public byte[] GetBytes()
     {
         throw new NotSupportedException();

@@ -176,6 +176,13 @@ public interface ISQLManager
     /// <param name="meeplIdentifier">The user that is trying to get their blob's identifier</param>
     /// <returns>A new instance of the ServerListBlob stored for this user or an empty object</returns>
     public Task<ServerListBlob> GetServerListBlob(MeeplIdentifier meeplIdentifier);
+    
+    /// <summary>
+    /// Updates a user's server list entry in our storage
+    /// </summary>
+    /// <param name="meeplIdentifier">The user that is trying to update their blob's identifier</param>
+    /// <param name="blob">The blob you want to update the former entry with</param>
+    public Task UpdateServerListBlob(MeeplIdentifier meeplIdentifier, ServerListBlob blob);
 
     #endregion
 }
