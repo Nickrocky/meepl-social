@@ -24,7 +24,10 @@ public class ServerListBlob : IMercurial
     
     public byte[] GetBytes()
     {
-        throw new NotSupportedException();
+        Pack pack = new Pack();
+        return pack
+            .Append(ServerList)
+            .Build();
     }
 
     public void AppendComponentBytes(Pack packer)
@@ -35,7 +38,8 @@ public class ServerListBlob : IMercurial
 
     public void FromBytes(byte[] payload)
     {
-        throw new NotSupportedException();
+        Unpack unpack = new Unpack(payload);
+        unpack.Read(ref ServerList);
     }
 
     public void ComponentFromBytes(Unpack unpack)

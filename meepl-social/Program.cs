@@ -107,7 +107,7 @@ serverListManager.Init(manager);
 
 
 var app = builder.Build();
-/*app.Use(async (context, next) =>
+app.Use(async (context, next) =>
 {
     Console.WriteLine($"Request Method: {context.Request.Method}");
     if (context.Request.Method == "OPTIONS")
@@ -117,7 +117,7 @@ var app = builder.Build();
         return;
     }
     await next();
-});*/
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

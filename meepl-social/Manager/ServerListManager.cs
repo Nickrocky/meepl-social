@@ -17,6 +17,7 @@ public class ServerListManager
 
     public void Init(ISQLManager sqlManager)
     {
+        instance = this;
         ServerListBlobs = new Dictionary<ulong, ServerListBlob>();
         _sqlManager = sqlManager;
     }

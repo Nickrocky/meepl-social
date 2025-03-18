@@ -37,16 +37,6 @@ public class ServerListController : ControllerBase
         Console.WriteLine("Attempting to check the following tablebound account: " + identity);
         var profile = await ProfileManager.GetProfile(identity);
         Console.WriteLine("Found account: " + profile.Username + " with the identifier: " + profile.MeeplIdentifier.Container);
-        if (!await ProfileManager.Exists(identity))
-        {
-            return File(
-                new ServerListResponse()
-                {
-                    ServerListBlob = new ServerListBlob(),
-                    Message = ErrorCodes.PROFILE_INVALID_PROFILE
-                }.GetBytes(), "application/octet-stream");
-        }
-
         var serverListBlob = await ServerListManager.Get().GetServerList(MeeplIdentifier.Parse(identity));
         
         return File(new ServerListResponse()
@@ -71,14 +61,6 @@ public class ServerListController : ControllerBase
         Console.WriteLine("Attempting to check the following tablebound account: " + identity);
         var profile = await ProfileManager.GetProfile(identity);
         Console.WriteLine("Found account: " + profile.Username + " with the identifier: " + profile.MeeplIdentifier.Container);
-        if (!await ProfileManager.Exists(identity))
-        {
-            return File(
-                new ServerListActionResponse()
-                {
-                    Msg = ErrorCodes.PROFILE_INVALID_PROFILE
-                }.GetBytes(), "application/octet-stream");
-        }
 
         var serverEntry = new ServerEntry()
         {
