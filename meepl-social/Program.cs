@@ -102,10 +102,6 @@ await profileManager.Init(manager);
 FriendManager friendManager = new FriendManager();
 await friendManager.Init(manager);
 
-ServerListManager serverListManager = new ServerListManager();
-serverListManager.Init(manager);
-
-
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -11,14 +11,14 @@ namespace Meepl.API;
 public interface ISQLManager
 {
     #region Tablebound Profiles
-    
+
     /// <summary>
     /// Gets the tablebound profile associated to this tablebound id
     /// </summary>
     /// <param name="tid">The tablebound id you want to query with</param>
     /// <returns>The tablebound profile associated with that id</returns>
     Task<MeeplProfile> GetTableboundProfile(MeeplIdentifier tid);
-    
+
     /// <summary>
     /// Updates the Tablebound profile of the user specified
     /// </summary>
@@ -54,30 +54,30 @@ public interface ISQLManager
     /// <param name="meeplIdentifier">The players identifier</param>
     /// <returns>The clubs and clans this player is a part of</returns>
     Task<OrganizationContainerBlob> GetOrganizationContainer(MeeplIdentifier meeplIdentifier);
-    
+
     #endregion
 
     #region Badges
-    
+
     /// <summary>
     /// Gets the badge from the database
     /// </summary>
     /// <param name="badgeIdentifier">The identifier for the badge in the database</param>
     /// <returns>The badge associated to that identifier in the database.</returns>
     public Task<BadgeBlob> GetBadge(ulong badgeIdentifier);
-    
+
     /// <summary>
     /// Inserts a badge blob entry into the database for a given badge
     /// </summary>
     /// <param name="badge">The badge you want to insert into the database</param>
     public Task InsertBadge(BadgeBlob badge);
-    
+
     /// <summary>
     /// Updates a badge blob in database to reflect the supplied badge blob
     /// </summary>
     /// <param name="badge">The badge you want use to update the database entry</param>
     public Task UpdateBadge(BadgeBlob badge);
-    
+
     /// <summary>
     /// Deletes a badge blob from the database
     /// </summary>
@@ -103,19 +103,19 @@ public interface ISQLManager
     /// </summary>
     /// <param name="eventBlob">The event you want to add to the database</param>
     public Task InsertEvent(EventBlob eventBlob);
-    
+
     /// <summary>
     /// Deletes an entry from the database
     /// </summary>
     /// <param name="eventBlob">The event you are looking to delete</param>
     public Task DeleteEvent(EventBlob eventBlob);
-    
+
     /// <summary>
     /// Updates the information for a given entry in the database
     /// </summary>
     /// <param name="eventBlob">The event info you want to be in the database</param>
     public Task UpdateEvent(EventBlob eventBlob);
-    
+
     #endregion
 
     #region Friends
@@ -132,13 +132,13 @@ public interface ISQLManager
     /// <param name="personListBlob">The person list blob you want to use for the update</param>
     /// <note> This function has an upsert behavior </note>
     public Task UpdateFriendList(PersonListBlob personListBlob, MeeplIdentifier tableboundID);
-    
+
     /// <summary>
     /// Gets the list of friend requests for a user from database
     /// </summary>
     /// <returns>The person list blob</returns>
     public Task<List<FriendRequestBlob>> GetFriendRequestList(MeeplIdentifier tableboundID);
-    
+
     #endregion
 
     #region Blocked
@@ -148,7 +148,7 @@ public interface ISQLManager
     /// </summary>
     /// <returns>The person list blob</returns>
     public Task<PersonListBlob> GetBlockList(MeeplIdentifier tableboundID);
-    
+
     /// <summary>
     /// Updates the person list blob for a profiles blocked list
     /// </summary>
@@ -168,21 +168,4 @@ public interface ISQLManager
 
     #endregion
 
-    #region Server Lists
-
-    /// <summary>
-    /// Gets the user's server list blob from our storage
-    /// </summary>
-    /// <param name="meeplIdentifier">The user that is trying to get their blob's identifier</param>
-    /// <returns>A new instance of the ServerListBlob stored for this user or an empty object</returns>
-    public Task<ServerListBlob> GetServerListBlob(MeeplIdentifier meeplIdentifier);
-    
-    /// <summary>
-    /// Updates a user's server list entry in our storage
-    /// </summary>
-    /// <param name="meeplIdentifier">The user that is trying to update their blob's identifier</param>
-    /// <param name="blob">The blob you want to update the former entry with</param>
-    public Task UpdateServerListBlob(MeeplIdentifier meeplIdentifier, ServerListBlob blob);
-
-    #endregion
 }

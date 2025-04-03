@@ -582,61 +582,6 @@ public class SqlManager : ISQLManager
     }
     
     #endregion
-
-
-    #region ServerLists
-
-    public async Task<ServerListBlob> GetServerListBlob(MeeplIdentifier meeplIdentifier)
-    {
-        var connection = CreateConnection();
-        await connection.OpenAsync();
-
-        var cmd = "SELECT SERVERLIST_CONTAINER_BLOB FROM PROFILE_SERVERLIST WHERE TABLEBOUND_ID = $1;";
-        var command = new NpgsqlCommand(cmd, connection);
-        command.Parameters.AddRange(new NpgsqlParameter[]
-        {
-            new NpgsqlParameter() { Value = (long) meeplIdentifier.Container },
-        });
-        var reader = await command.ExecuteReaderAsync();
-        
-        byte[] buffer = new byte[8192];
-        ServerListBlob blob = new ServerListBlob();
-        if (reader.HasRows)
-        {
-            reader.Read();
-            var numberRead = reader.GetBytes(0, 0, buffer, 0, 8192);
-            blob.FromBytes(buffer);
-        }
-
-        await command.DisposeAsync();
-        await reader.DisposeAsync();
-        await connection.DisposeAsync();
-        
-        return blob;
-    }
-
-
-    public async Task UpdateServerListBlob(MeeplIdentifier meeplIdentifier, ServerListBlob blob)
-    {
-        var connection = CreateConnection();
-        await connection.OpenAsync();
-        var cmd = "INSERT INTO PROFILE_SERVERLIST (TABLEBOUND_ID, SERVERLIST_CONTAINER_BLOB) VALUES ($1, $2) ON CONFLICT (TABLEBOUND_ID) DO UPDATE SET SERVERLIST_CONTAINER_BLOB = $2;";
-        //var cmd = "UPDATE PROFILE_SERVERLIST SET SERVERLIST_CONTAINER_BLOB = $2 WHERE TABLEBOUND_ID = $1;";
-        var command = new NpgsqlCommand(cmd, connection);
-
-        command.Parameters.AddRange(new NpgsqlParameter[]
-        {
-            new NpgsqlParameter() { Value = (long) meeplIdentifier.Container },
-            new NpgsqlParameter() { Value = blob.GetBytes()}
-        });
-        
-        await command.ExecuteNonQueryAsync();
-
-        await command.DisposeAsync();
-        await connection.DisposeAsync();
-    }
-    
-    #endregion
     
     
     private static NpgsqlConnection CreateConnection()
